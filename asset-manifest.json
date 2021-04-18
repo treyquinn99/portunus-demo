@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/portunus-demo/static/css/main.655b47d9.chunk.css",
+    "main.js": "/portunus-demo/static/js/main.68130dbc.chunk.js",
+    "main.js.map": "/portunus-demo/static/js/main.68130dbc.chunk.js.map",
+    "runtime-main.js": "/portunus-demo/static/js/runtime-main.a85bceb1.js",
+    "runtime-main.js.map": "/portunus-demo/static/js/runtime-main.a85bceb1.js.map",
+    "static/js/2.6c91ebe5.chunk.js": "/portunus-demo/static/js/2.6c91ebe5.chunk.js",
+    "static/js/2.6c91ebe5.chunk.js.map": "/portunus-demo/static/js/2.6c91ebe5.chunk.js.map",
+    "static/js/3.222d4479.chunk.js": "/portunus-demo/static/js/3.222d4479.chunk.js",
+    "static/js/3.222d4479.chunk.js.map": "/portunus-demo/static/js/3.222d4479.chunk.js.map",
+    "index.html": "/portunus-demo/index.html",
+    "static/css/main.655b47d9.chunk.css.map": "/portunus-demo/static/css/main.655b47d9.chunk.css.map",
+    "static/js/2.6c91ebe5.chunk.js.LICENSE.txt": "/portunus-demo/static/js/2.6c91ebe5.chunk.js.LICENSE.txt",
+    "static/media/portunus_logo.ebf926cb.png": "/portunus-demo/static/media/portunus_logo.ebf926cb.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a85bceb1.js",
+    "static/js/2.6c91ebe5.chunk.js",
+    "static/css/main.655b47d9.chunk.css",
+    "static/js/main.68130dbc.chunk.js"
+  ]
+}
