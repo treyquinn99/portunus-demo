@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  text-align: left;
 }
 
 .App-logo {
@@ -35,4 +35,126 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+input {
+  background-color: white;
+  border: 2px solid black;
+  width: 20vw;
+  height: 3vh;
+  font-size: calc(10px + 1vmin);
+  text-align: center;
+  color: black;
+  outline: none;
+}
+
+label {
+  font-size: calc(10px + 1vmin);
+}
+
+.DirectoryScreen {
+  padding-top: 3%;
+}
+
+.DirectoryList {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+}
+
+.OpListing {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: auto;
+  width: 20%;
+  padding-top: 3%;
+}
+
+.OpListing:hover {
+  background-color: #ffddd9;
+}
+
+.NavBar {
+  height: 10 vh;
+  width: 100%;
+  background-color: #0f0826;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.PortunusLogo {
+  left: 0%;
+}
+
+.NavButtons {
+  top: 40%;
+  width:100px; 
+  right: 40%; 
+  bottom: 0;
+  position:absolute;
+}
+
+.NavBarButton {
+  color: #e7d679;
+  background-color: #0f0826;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: calc(2vmin);
+}
+
+.NavBarButton:hover {
+  color: #ffddd9;
+}
+
+.UserProfile {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+  padding-top: 3%;
+}
+
+.EditProfile {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+  padding-top: 3%;
+}
+
+.ProfileButton {
+  color: #e7d679;
+  background-color: #0f0826;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: calc(1.5vmin);
+}
+
+.ProfileButton:hover {
+  color: #ffddd9;
+}
+
+.ProfileInfo {
+  font-size: calc(1.5vmin);
+}
+
+.ListingInfo {
+  font-size: calc(1.5vmin);
+}
+.PageHeader {
+  text-align: center;
 }
