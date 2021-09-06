@@ -82,7 +82,9 @@ class ProfilePage extends React.Component {
     userLoggedIn = false;
     ReactDOM.render(<ProfilePage />, document.getElementById('root'));
   }
-
+  onClickHandlerCreateNewAccount() {
+    ReactDOM.render(<CreateNewAccount />, document.getElementById('root'));
+  }
 
   render () {
     if(userLoggedIn) {
@@ -127,12 +129,13 @@ class ProfilePage extends React.Component {
           <br />
           <br />
           <p className="ProfileInfo">
-            <b>Johnny Appleseed</b>
-            <br/>Junior, Computer Science
+            <b>Welcome to Portunus</b>
+            <br/>Select an option below to log in or create a new account.
           <br />
           <br />
           </p>
             <button className="ProfileButton" onClick={this.onClickHandlerLogIn} alt="Button to log into user profile.">Log In</button>
+            <button className="ProfileButton" onClick={this.onClickHandlerCreateNewAccount} alt="Button to create a new account.">Create New Account</button>
           </div>
         </div>
       ); // end return
@@ -223,6 +226,71 @@ class EditProfile extends React.Component {
     ); // end return
   } // end render()
 } // end EditProfile
+
+class CreateNewAccount extends React.Component {
+  onClickHandlerSubmit() {
+    userLoggedIn = true;
+    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+  }
+  onClickHandlerBack() {
+    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+  }
+  render () {
+    return (
+      <div>
+        <NavigationBar />
+        <div className="EditProfile">
+        <br />
+        <h1 className="PageHeader">Create New Account</h1>
+        <form>
+          <label>
+            Enter Name
+            <br />
+            <br />
+            <input type="text" name="name" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Enter Email
+            <br />
+            <br />
+            <input type="text" name="name" />
+          </label>
+          <br />
+          <br /><label>
+            Enter Password
+            <br />
+            <br />
+            <input type="text" name="name" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Enter College Year
+            <br />
+            <br />
+            <input type="text" name="name" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Enter Major
+            <br />
+            <br />
+            <input type="text" name="name" />
+          </label>
+          <br />
+          <br />
+          <button className="ProfileButton" alt="Button to return to login screen."onClick={this.onClickHandlerBack}>Back</button>
+          <button className="ProfileButton" alt="Button to change profile picture.">Edit Picture</button>
+          <button className="ProfileButton" alt="Button to submit profile information and login." onClick={this.onClickHandlerSubmit}>Submit</button>
+        </form>
+        </div>
+      </div>
+    ); // end return
+  } // end render()
+} // end CreateNewAccount
 
 function App() {
   return (
