@@ -92,8 +92,8 @@ label {
 
 .NavButtons {
   top: 40%;
-  width:100px; 
-  right: 40%; 
+  width:100px;
+  right: 40%;
   bottom: 0;
   position:absolute;
 }
@@ -124,6 +124,15 @@ label {
 }
 
 .EditProfile {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+  padding-top: 3%;
+}
+
+.LogIn {
   text-align: center;
   text-decoration: none;
   display: inline-block;

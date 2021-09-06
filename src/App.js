@@ -6,8 +6,9 @@ import logo from './logo-placeholder.png'
 import profilePlaceholder from "./ProfilePlaceholder.png";
 import portunusLogo from "./portunus_logo.png";
 
-class NavigationBar extends React.Component {
+var userLoggedIn = false;
 
+class NavigationBar extends React.Component {
   loadUserProfile() {
     ReactDOM.render(<ProfilePage />, document.getElementById('root'));
   }
@@ -74,36 +75,109 @@ class ProfilePage extends React.Component {
   onClickHandler() {
     ReactDOM.render(<EditProfile />, document.getElementById('root'));
   }
+  onClickHandlerLogIn() {
+    ReactDOM.render(<LogIn />, document.getElementById('root'));
+  }
+  onClickHandlerLogOut() {
+    userLoggedIn = false;
+    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+  }
+
+
+  render () {
+    if(userLoggedIn) {
+      return (
+        <div>
+          <NavigationBar />
+          <div className="UserProfile">
+          <h1 className="PageHeader">User Profile</h1>
+          <br />
+          <img className="ProfilePicture"
+            src={profilePlaceholder}
+            height={175}
+            alt="default user profile picture"
+          />
+          <br />
+          <br />
+          <p className="ProfileInfo">
+            <b>Johnny Appleseed</b>
+            <br/>Junior, Computer Science
+          <br />
+          <br />
+          </p>
+            <button className="ProfileButton" onClick={this.onClickHandler} alt="Button to edit user profile.">Edit Profile</button>
+            <button className="ProfileButton" alt="Button to view followed job listings.">View Followed Jobs</button>
+            <button className="ProfileButton" alt="Button to view followed professional development opportunities.">View Followed Opportunities</button>
+            <button className="ProfileButton" onClick={this.onClickHandlerLogOut} alt="Button to log out.">Log Out</button>
+          </div>
+        </div>
+      ); // end return
+    } else {
+      return (
+        <div>
+          <NavigationBar />
+          <div className="UserProfile">
+          <h1 className="PageHeader">User Profile</h1>
+          <br />
+          <img className="ProfilePicture"
+            src={profilePlaceholder}
+            height={175}
+            alt="default user profile picture"
+          />
+          <br />
+          <br />
+          <p className="ProfileInfo">
+            <b>Johnny Appleseed</b>
+            <br/>Junior, Computer Science
+          <br />
+          <br />
+          </p>
+            <button className="ProfileButton" onClick={this.onClickHandlerLogIn} alt="Button to log into user profile.">Log In</button>
+          </div>
+        </div>
+      ); // end return
+    } // end else
+  } // end render()
+} // end ProfilePage
+
+class LogIn extends React.Component {
+  onClickHandler() {
+    userLoggedIn = true;
+    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+  }
 
   render () {
     return (
       <div>
         <NavigationBar />
-        <div className="UserProfile">
-        <h1 className="PageHeader">User Profile</h1>
+        <div className="LogIn">
         <br />
-        <img className="ProfilePicture"
-          src={profilePlaceholder}
-          height={175}
-          alt="default user profile picture"
-        />
-        <br />
-        <br />
-        <p className="ProfileInfo">
-          <b>Johnny Appleseed</b>
-          <br/>Junior, Computer Science
-        <br />
-        <br />
-        </p>
-          <button className="ProfileButton" onClick={this.onClickHandler} alt="Button to edit user profile.">Edit Profile</button>
-          <button className="ProfileButton" alt="Button to view followed job lisings.">View Followed Jobs</button>
-          <button className="ProfileButton" alt="Button to view followed professional development opportunities.">View Followed Opportunities</button>
-          <button className="ProfileButton" alt="Button to log out.">Log Out</button>
+        <h1 className="PageHeader">Log in to Profile</h1>
+        <form>
+          <label>
+            Enter Email
+            <br />
+            <br />
+            <input type="email" name="email" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Enter Password
+            <br />
+            <br />
+            <input type="password" name="password" />
+          </label>
+          <br />
+          <br />
+          <button className="ProfileButton" alt="Button to submit profile information."
+            onClick={this.onClickHandler}>Submit</button>
+        </form>
         </div>
       </div>
     ); // end return
   } // end render()
-} // end ProfilePage
+} // end LogIn
 
 class EditProfile extends React.Component {
   onClickHandler() {
@@ -146,7 +220,7 @@ class EditProfile extends React.Component {
         </form>
         </div>
       </div>
-    );
+    ); // end return
   } // end render()
 } // end EditProfile
 
