@@ -1,0 +1,4 @@
+{
+    "mongoURI":
+      "mongodb+srv://portunus_user:portunus_user_user@cluster0.aoqxj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  }
