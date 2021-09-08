@@ -1,4 +1,5 @@
-import validator from 'validator';
+const validator = require('validator');
+const isEmpty = require('is-empty');
 
 function validateNewAccount(data) {
     let errors = {};
@@ -8,7 +9,7 @@ function validateNewAccount(data) {
     }
     if (validator.isEmpty(data.email + '')) {
         errors.email = "Email field cannot be empty";
-    } else if (!validator.isEmail(data.email)) {
+    } else if (!validator.isEmail(data.email + '')) {
         errors.email = "Email is not in correct format";
     }
     if (validator.isEmpty(data.password + '')) {
@@ -35,7 +36,10 @@ function validateLogin(data) {
     if (validator.isEmpty(data.password + '')) {
         errors.password = "Passowrd cannot be empty";
     }
+    return {
+        errors, isValid: isEmpty(errors)
+    }
 }
 
 
-modules.export = {validateLogin, validateNewAccount};
+module.exports = {validateLogin, validateNewAccount};

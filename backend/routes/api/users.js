@@ -5,15 +5,14 @@ const express = require('express');
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require('../../models/User');
-const { validateLogin, validateCreateAccount } = require('../../validation.js');
-
+const {validateLogin, validateNewAccount} = require('../../validation.js');
 
 // @route POST api/users/register
 // @description tests users route
 // @access Public
 router.post('/register', (req, res) => {
 // call helper function to see if account info is valid 
-  const {errors, isValid} = validateCreateAccount(req.body);
+  const {errors, isValid} = validateNewAccount(req.body);
   
   if (!isValid) {
     return res.status(400).json(errors);
@@ -30,26 +29,25 @@ router.post('/register', (req, res) => {
           if (err) {
             throw err;
           }
-          hashedPassword = hash;
+          // add the user to the database with the hashed password
+          User.create({
+            name: req.body.name,
+            email: req.body.email,
+            password: hash,
+            collegeYear: req.body.collegeYear,
+            major: req.body.major
+          })
+          .then(user => res.json({ msg: 'User added successfully' }))
+          .catch(err => res.status(400).json({ error: err}));
         });
       });
-      // add the user to the database with the hashed password
-      User.create({
-        name: req.body.name,
-        email: req.body.email,
-        password: hashedPassword,
-        collegeYear: req.body.collegeYear,
-        major: req.body.major
-      })
-      .then(user => res.json({ msg: 'User added successfully' }))
-      .catch(err => res.status(400).json({ error: 'Unable to add this user'}));
     }
   });
 });
 
 router.post('/login', (req, res) => {
   // call helper function to see if login info is valid
-  const {errors, isValid} = validateLogin(req.body);
+  const { errors, isValid } = validateLogin(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
   }
