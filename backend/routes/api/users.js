@@ -2,20 +2,72 @@
 // created in the models folder.
 
 const express = require('express');
+const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require('../../models/User');
+const { validateLogin, validateCreateAccount } = require('../../validation.js');
 
 
 // @route POST api/users/register
 // @description tests users route
 // @access Public
 router.post('/register', (req, res) => {
-  User.create(req.body)
-    .then(user => res.json({ msg: 'User added successfully' }))
-    .catch(err => res.status(400).json({ error: 'Unable to add this user'}));
+// call helper function to see if account info is valid 
+  const {errors, isValid} = validateCreateAccount(req.body);
+  
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  // if the inputs are valid, check to make sure the user doesn't already exist.
+  // else, add it to the database
+  User.findOne({email: req.body.email }).then(user => {
+    if (user) {
+      return res.status(400).json({email: "Email already exists"});
+    } else {
+      // salt the password before adding it to the database
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+          if (err) {
+            throw err;
+          }
+          hashedPassword = hash;
+        });
+      });
+      // add the user to the database with the hashed password
+      User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+        collegeYear: req.body.collegeYear,
+        major: req.body.major
+      })
+      .then(user => res.json({ msg: 'User added successfully' }))
+      .catch(err => res.status(400).json({ error: 'Unable to add this user'}));
+    }
+  });
 });
 
-
-
-
+router.post('/login', (req, res) => {
+  // call helper function to see if login info is valid
+  const {errors, isValid} = validateLogin(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  const email = req.body.email;
+  const password = req.body.password;
+  // check if user exists
+  User.findOne({ email }).then(user => {
+    if (!user) {
+      return res.status(404).json({ userNotFound: "User does not exist with this email address"});
+    }
+    // check if passwords match
+    bcrypt.compare(password, user.password).then(match => {
+      if (match) {
+        return res.json({success: true});
+      } else {
+        return res.status(400).json({invalidPassword: "Incorrect Password"});
+      }
+    })
+  });
+}) 
 module.exports = router;
