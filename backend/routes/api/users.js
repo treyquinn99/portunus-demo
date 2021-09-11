@@ -12,6 +12,7 @@ const {validateLogin, validateNewAccount} = require('../../validation.js');
 // @access Public
 router.post('/register', (req, res) => {
 // call helper function to see if account info is valid 
+  console.log(req.body);
   const {errors, isValid} = validateNewAccount(req.body);
   
   if (!isValid) {
@@ -61,11 +62,20 @@ router.post('/login', (req, res) => {
     // check if passwords match
     bcrypt.compare(password, user.password).then(match => {
       if (match) {
-        return res.json({success: true});
+        return res.json({name: user.name, collegeYear: user.collegeYear, major: user.major});
       } else {
         return res.status(400).json({invalidPassword: "Incorrect Password"});
       }
     })
   });
 }) 
+
+router.get('/:id', (req, res) => {
+  const email = req.query.myparam1;
+  User.findOne({"email": email}).then(user => {
+    res.json(user);
+    })
+    .catch(err => console.log(err));
+})
+
 module.exports = router;

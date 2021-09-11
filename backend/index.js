@@ -14,6 +14,8 @@ const users = require('./routes/api/users')
 
 app.use(express.json({extended: false}));
 
+app.use(cors());
+
 // placeholder 
 app.get("/", (req, res) => {
     res.json({ message: "Hello from server!" });

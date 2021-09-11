@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { Col, Container, Row } from 'react-bootstrap';
 import logo from './logo-placeholder.png'
@@ -71,6 +71,14 @@ function DirectoryScreen() {
 }
 
 class ProfilePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: props.name,
+      collegeYear: props.collegeYear,
+      major: props.major
+    };
+  }
 
   onClickHandler() {
     ReactDOM.render(<EditProfile />, document.getElementById('root'));
@@ -102,8 +110,8 @@ class ProfilePage extends React.Component {
           <br />
           <br />
           <p className="ProfileInfo">
-            <b>Johnny Appleseed</b>
-            <br/>Junior, Computer Science
+            <b>{this.state.name}</b>
+            <br/>{this.state.collegeYear}, {this.state.major}
           <br />
           <br />
           </p>
@@ -144,11 +152,39 @@ class ProfilePage extends React.Component {
 } // end ProfilePage
 
 class LogIn extends React.Component {
-  onClickHandler() {
-    userLoggedIn = true;
-    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+  constructor(props) {
+    super(props);
+    this.state = {
+      email:'',
+      password:'',
+    };     
+    this.onSubmit = this.onClickHandler.bind(this);
   }
-
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+  onClickHandler = e => {
+    e.preventDefault();
+    fetch('http://localhost:3001/api/users/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body : JSON.stringify({
+        email: this.state.email,
+        password: this.state.password,
+      })
+    })
+    .then(res => {
+        userLoggedIn = true
+        fetch(`http://localhost:3001/api/users/:id/?myparam1=${this.state.email}`, {
+          method: 'GET',
+          headers: {'Content-Type': 'application/json'},
+        })
+          .then(resp => resp.json())
+          .then(data => {
+            ReactDOM.render(<ProfilePage name = {data.name} collegeYear = {data.collegeYear} major = {data.major} />, document.getElementById('root'));
+          })
+      })
+    }
   render () {
     return (
       <div>
@@ -161,7 +197,7 @@ class LogIn extends React.Component {
             Enter Email
             <br />
             <br />
-            <input type="email" name="email" />
+            <input type="email" name="email" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
@@ -169,12 +205,12 @@ class LogIn extends React.Component {
             Enter Password
             <br />
             <br />
-            <input type="password" name="password" />
+            <input type="password" name="password" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
           <button className="ProfileButton" alt="Button to submit profile information."
-            onClick={this.onClickHandler}>Submit</button>
+            onClick={this.onSubmit}>Submit</button>
         </form>
         </div>
       </div>
@@ -228,10 +264,71 @@ class EditProfile extends React.Component {
 } // end EditProfile
 
 class CreateNewAccount extends React.Component {
-  onClickHandlerSubmit() {
-    userLoggedIn = true;
-    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+  constructor() {
+    super();
+    this.state = {
+      name: '',
+      email:'',
+      password:'',
+      collegeYear:'',
+      major:''
+    };
+    this.onSubmit = this.onClickHandlerSubmit.bind(this);
   }
+
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  onClickHandlerSubmit = e => {
+    e.preventDefault();
+    fetch('http://localhost:3001/api/users/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body : JSON.stringify({
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password,
+        collegeYear: this.state.collegeYear,
+        major: this.state.major
+      })
+    })
+    .then(res => {
+      if (res.status === 200) {
+        userLoggedIn = true;
+        ReactDOM.render(<ProfilePage name = {this.state.name} major = {this.state.major} collegeYear = {this.state.collegeYear}  />, document.getElementById('root'));
+        this.state = {
+          name: '',
+          email:'',
+          password:'',
+          collegeYear:'',
+          major:''
+        };
+      } else {
+        this.state = {
+          name: '',
+          email:'',
+          password:'',
+          collegeYear:'',
+          major:''
+        };
+        ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+
+      }
+    }).catch(err => {
+      this.state = {
+        name: '',
+        email:'',
+        password:'',
+        collegeYear:'',
+        major:''
+      };
+      ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+      console.log(err);
+    })
+  }
+
+
   onClickHandlerBack() {
     ReactDOM.render(<ProfilePage />, document.getElementById('root'));
   }
@@ -242,12 +339,12 @@ class CreateNewAccount extends React.Component {
         <div className="EditProfile">
         <br />
         <h1 className="PageHeader">Create New Account</h1>
-        <form>
+        <form onSubmit={this.onSubmit}>
           <label>
             Enter Name
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="name" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
@@ -255,14 +352,14 @@ class CreateNewAccount extends React.Component {
             Enter Email
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="email" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br /><label>
             Enter Password
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="password" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
@@ -270,7 +367,7 @@ class CreateNewAccount extends React.Component {
             Enter College Year
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="collegeYear" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
@@ -278,13 +375,13 @@ class CreateNewAccount extends React.Component {
             Enter Major
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="major" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
           <button className="ProfileButton" alt="Button to return to login screen."onClick={this.onClickHandlerBack}>Back</button>
           <button className="ProfileButton" alt="Button to change profile picture.">Edit Picture</button>
-          <button className="ProfileButton" alt="Button to submit profile information and login." onClick={this.onClickHandlerSubmit}>Submit</button>
+          <button className="ProfileButton" alt="Button to submit profile information and login.">Submit</button>
         </form>
         </div>
       </div>
