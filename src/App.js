@@ -33,9 +33,24 @@ class NavigationBar extends React.Component {
   }
 }
 
-function OpListing(props) {
+class OpListing extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      orgName: props.orgName,
+      opType: props.opType,
+      description: props.description
+    };
+  }
+
+  onClickHandler() {
+    ReactDOM.render(<OrganizationPage />, document.getElementById('root'));
+  }
+  
+  render() {
   return (
-    <div className='OpListing'>
+    <div className='OpListing' onClick={this.onClickHandler}>
                 <img
                   width={100}
                   height={100}
@@ -44,12 +59,13 @@ function OpListing(props) {
                 />
                 <br />
                 <p className="ListingInfo">
-                  <b>{props.orgName}</b> <br />
-                  {props.opType}
+                  <b>{this.state.orgName}</b> <br />
+                  {this.state.opType}
                 </p>
     </div>
 
   );
+  }
 }
 
 function DirectoryScreen() {
@@ -60,10 +76,10 @@ function DirectoryScreen() {
       <h1 className="PageHeader">Professional Development Opportunities</h1>
       <br />
       <div className="DirectoryList">
-      <OpListing orgName='Internship Analytics Company' opType='Resume Boosting'/>
-      <OpListing orgName='Interview Preparation Company' opType='Workshop'/>
-      <OpListing orgName='Women in STEM' opType='Mentorship Program'/>
-      <OpListing orgName='Career Analytics' opType='Career Coaching'/>
+      <OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>
+      <OpListing orgName='Interview Preparation Company' opType='Workshop' description="This is an interview preparation company."/>
+      <OpListing orgName='Women in STEM' opType='Mentorship Program' description="This is a mentorship program."/>
+      <OpListing orgName='Career Analytics' opType='Career Coaching' description="This is a career coaching program."/>
       </div>
       </div>
     </div>
@@ -150,6 +166,49 @@ class ProfilePage extends React.Component {
     } // end else
   } // end render()
 } // end ProfilePage
+
+class OrganizationPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: props.name,
+      description: props.description
+    };
+  }
+
+  onClickHandlerBack() {
+    ReactDOM.render(<DirectoryScreen />, document.getElementById('root'));
+  }
+  onClickHandlerFollow() {
+    
+  }
+
+  render () {
+      return (
+        <div>
+          <NavigationBar />
+          <div className="UserProfile">
+          <h1 className="PageHeader">{this.state.name}</h1>
+          <br />
+          <img className="ProfilePicture"
+            src={profilePlaceholder}
+            height={175}
+            alt="default user profile picture"
+          />
+          <br />
+          <br />
+          <p className="ProfileInfo">
+            <br/>{this.state.description}
+          <br />
+          <br />
+          </p>
+            <button className="ProfileButton" onClick={this.onClickHandlerBack} alt="Button to return to directory.">Back</button>
+            <button className="ProfileButton" onClick={this.onClickHandlerFollow} alt="Button to follow this opportunity.">Follow Opportunity</button>
+          </div>
+        </div>
+      ); // end return
+  } // end render()
+} // end OrganizationPage
 
 class LogIn extends React.Component {
   constructor(props) {
