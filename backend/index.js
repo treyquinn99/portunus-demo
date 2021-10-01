@@ -11,6 +11,7 @@ connectDB()
 
 
 const users = require('./routes/api/users')
+const organizations = require('./routes/api/organization')
 
 app.use(express.json({extended: false}));
 
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
   });
 // use users route. Can add more as needed
 app.use('/api/users', users)
+app.use('/api/organizations', organizations)
 
 // start the server
 app.listen(PORT, () => {

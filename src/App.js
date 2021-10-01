@@ -52,7 +52,10 @@ class OpListing extends React.Component {
         })
           .then(resp => resp.json())
           .then(data => {
-            ReactDOM.render(<OrganizationPage name = {data.name} description = {data.description} />, document.getElementById('root'));
+            ReactDOM.render(<OrganizationPage name = {data.orgName} description = {data.orgDescription} />, document.getElementById('root'));
+          })
+          .catch(err => {
+            console.log(err);
           })
   }
   
