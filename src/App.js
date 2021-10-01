@@ -42,6 +42,7 @@ class OpListing extends React.Component {
       opType: props.opType,
       description: props.description
     };
+    this.onClickHandler = this.onClickHandler.bind(this);
   }
 
   onClickHandler() {
