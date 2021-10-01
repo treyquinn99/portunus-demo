@@ -8,18 +8,10 @@
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
-    "babel-preset-react": "^6.24.1",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "config": "^3.3.6",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "mongoose": "^5.13.9",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "validation": "0.0.1",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
