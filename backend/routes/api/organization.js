@@ -4,12 +4,11 @@
 const express = require('express');
 const router = express.Router();
 const Organization = require('../../models/Organization');
-const {validateLogin, validateNewAccount} = require('../../validation.js');
 
 router.get('/:id', (req, res) => {
   const orgName = req.query.myparam1;
-  User.findOne({"orgName": orgName}).then(user => {
-    res.json(user);
+  Organization.findOne({"orgName": orgName}).then(org => {
+    res.json(org);
     })
     .catch(err => console.log(err));
 })
