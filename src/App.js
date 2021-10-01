@@ -45,7 +45,14 @@ class OpListing extends React.Component {
   }
 
   onClickHandler() {
-    ReactDOM.render(<OrganizationPage />, document.getElementById('root'));
+    fetch(`http://localhost:3001/api/organizations/:id/?myparam1=${this.state.orgName}`, {
+          method: 'GET',
+          headers: {'Content-Type': 'application/json'},
+        })
+          .then(resp => resp.json())
+          .then(data => {
+            ReactDOM.render(<OrganizationPage name = {data.name} description = {data.description} />, document.getElementById('root'));
+          })
   }
   
   render() {
@@ -94,10 +101,12 @@ class ProfilePage extends React.Component {
       collegeYear: props.collegeYear,
       major: props.major
     };
+    this.onClickHandler = this.onClickHandler.bind(this)
   }
 
   onClickHandler() {
-    ReactDOM.render(<EditProfile />, document.getElementById('root'));
+    console.log(this.state)
+    ReactDOM.render(<EditProfile name = {this.state.name} collegeYear = {this.state.collegeYear} major = {this.state.major} />, document.getElementById('root'));
   }
   onClickHandlerLogIn() {
     ReactDOM.render(<LogIn />, document.getElementById('root'));
@@ -233,6 +242,7 @@ class LogIn extends React.Component {
       })
     })
     .then(res => {
+      if (res.status == 200) {
         userLoggedIn = true
         fetch(`http://localhost:3001/api/users/:id/?myparam1=${this.state.email}`, {
           method: 'GET',
@@ -242,6 +252,7 @@ class LogIn extends React.Component {
           .then(data => {
             ReactDOM.render(<ProfilePage name = {data.name} collegeYear = {data.collegeYear} major = {data.major} />, document.getElementById('root'));
           })
+        }
       })
     }
   render () {
@@ -278,8 +289,17 @@ class LogIn extends React.Component {
 } // end LogIn
 
 class EditProfile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: props.name,
+      collegeYear: props.collegeYear,
+      major: props.major
+    };
+    this.onClickHandler = this.onClickHandler.bind(this)
+  }
   onClickHandler() {
-    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+    ReactDOM.render(<ProfilePage name = {this.state.name} collegeYear = {this.state.collegeYear} major = {this.state.major}/>, document.getElementById('root'));
   }
   render () {
     return (
