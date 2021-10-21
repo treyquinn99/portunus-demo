@@ -1,4 +1,4 @@
-// This file handles all api routes dealing with users. It utilizes the mongoose schema for User
+// This file handles all api routes dealing with professional organizations. It utilizes the mongoose schema for User
 // created in the models folder.
 
 const express = require('express');
