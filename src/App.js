@@ -90,6 +90,7 @@ function DirectoryScreen(props) {
       <NavigationBar />
       <div className='DirectoryScreen'>
       <h1 className="PageHeader">{props.title}</h1>
+      <SearchBar />
       <br />
       <div className="DirectoryList">
       <OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>
@@ -100,6 +101,31 @@ function DirectoryScreen(props) {
       </div>
     </div>
     );
+}
+
+class SearchBar extends React.Component {
+  onSubmit() {
+
+  }
+  handleChange() {
+
+  }
+  render () {
+    return (
+      <div className="LogIn">
+        <form>
+          <label>
+            Search Directory
+            <br />
+            <br />
+            <input type="query" name="query" onChange={this.handleChange} />
+          </label>
+          <button className="ProfileButton" alt="Button to search through postings."
+            onClick={this.onSubmit}>Search</button>
+        </form>
+        </div>
+    ); // end return
+  } // end render()
 }
 
 class ProfilePage extends React.Component {
