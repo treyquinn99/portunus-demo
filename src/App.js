@@ -13,9 +13,11 @@ class NavigationBar extends React.Component {
     ReactDOM.render(<ProfilePage />, document.getElementById('root'));
   }
   loadPDDirectory() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('root'))
     ReactDOM.render(<DirectoryScreen title="Professional Development Opportunities"/>, document.getElementById('root'));
   }
   loadJobsDirectory() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('root'))
     ReactDOM.render(<DirectoryScreen title="Job Opportunities"/>, document.getElementById('root'));
   }
   render() {
@@ -85,6 +87,7 @@ class OpListing extends React.Component {
 }
 
 function DirectoryScreen(props) {
+  if (props.title == "Professional Development Opportunities") {
     return (
     <div>
       <NavigationBar />
@@ -101,6 +104,25 @@ function DirectoryScreen(props) {
       </div>
     </div>
     );
+  } else {
+    return (
+      <div>
+        <NavigationBar />
+        <div className='DirectoryScreen'>
+        <h1 className="PageHeader">{props.title}</h1>
+        <SearchBar />
+        <br />
+        <div className="DirectoryList">
+        <OpListing orgName='Facebook' opType='Junior Software Engineer' description="This is an internship at an analytics company."/>
+        <OpListing orgName='Coca-Cola' opType='Strategic Analyst' description="This is an interview preparation company."/>
+        <OpListing orgName='Amazon' opType='Summer Internship' description="This is a mentorship program."/>
+        <OpListing orgName='Bank of America' opType='Financial Analyst' description="This is a career coaching program."/>
+        </div>
+        </div>
+      </div>
+      );
+
+  }
 }
 
 class SearchBar extends React.Component {
