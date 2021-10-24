@@ -13,4 +13,16 @@ router.get('/:id', (req, res) => {
     .catch(err => console.log(err));
 })
 
+router.get('/', function(req, res) {
+  JobOpportunity.find({}, function(err, jobs) {
+    let jobMap = {};
+
+    jobs.forEach(function(job) {
+      jobMap[job._id] = job;
+    });
+    
+    res.send(jobMap);  
+  });
+})
+
 module.exports = router;

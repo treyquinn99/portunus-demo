@@ -12,7 +12,7 @@ const OrganizationSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	jobTitle: {
+	opType: {
 		type: String,
 		required: true
 	},

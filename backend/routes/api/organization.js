@@ -13,4 +13,16 @@ router.get('/:id', (req, res) => {
     .catch(err => console.log(err));
 })
 
+router.get('/', function(req, res) {
+  Organization.find({}, function(err, orgs) {
+    let orgMap = {};
+
+    orgs.forEach(function(org) {
+      orgMap[org._id] = org;
+    });
+    
+    res.send(orgMap);  
+  });
+})
+
 module.exports = router;
