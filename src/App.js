@@ -13,7 +13,10 @@ class NavigationBar extends React.Component {
     ReactDOM.render(<ProfilePage />, document.getElementById('root'));
   }
   loadPDDirectory() {
-    ReactDOM.render(<DirectoryScreen />, document.getElementById('root'));
+    ReactDOM.render(<DirectoryScreen title="Professional Development Opportunities"/>, document.getElementById('root'));
+  }
+  loadJobsDirectory() {
+    ReactDOM.render(<DirectoryScreen title="Job Opportunities"/>, document.getElementById('root'));
   }
   render() {
     return (
@@ -25,6 +28,8 @@ class NavigationBar extends React.Component {
               <button className="NavBarButton" alt="Button to load user profile." onClick={this.loadUserProfile}>User Profile</button>
               <button className="NavBarButton" alt="Button to load Professional Development Opportunities directory."
                 onClick={this.loadPDDirectory}>Professional Development Opportunities</button>
+              <button className="NavBarButton" alt="Button to load Job Opportunities directory."
+                onClick={this.loadJobsDirectory}>Job Opportunities</button>
             </div>
           </Row>
         </Container>
@@ -79,12 +84,12 @@ class OpListing extends React.Component {
   }
 }
 
-function DirectoryScreen() {
+function DirectoryScreen(props) {
     return (
     <div>
       <NavigationBar />
       <div className='DirectoryScreen'>
-      <h1 className="PageHeader">Professional Development Opportunities</h1>
+      <h1 className="PageHeader">{props.title}</h1>
       <br />
       <div className="DirectoryList">
       <OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>
