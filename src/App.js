@@ -8,6 +8,7 @@ import portunusLogo from "./portunus_logo.png";
 
 var userLoggedIn = false;
 
+
 class NavigationBar extends React.Component {
   loadUserProfile() {
     ReactDOM.render(<ProfilePage />, document.getElementById('root'));
@@ -86,44 +87,70 @@ class OpListing extends React.Component {
   }
 }
 
-function DirectoryScreen(props) {
-  if (props.title == "Professional Development Opportunities") {
-    return (
-    <div>
-      <NavigationBar />
-      <div className='DirectoryScreen'>
-      <h1 className="PageHeader">{props.title}</h1>
-      <SearchBar suggestions = {["bat", "bell", "bolt"]}/>
-      <br />
-      <div className="DirectoryList">
-      <OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>
-      <OpListing orgName='Interview Preparation Company' opType='Workshop' description="This is an interview preparation company."/>
-      <OpListing orgName='Women in STEM' opType='Mentorship Program' description="This is a mentorship program."/>
-      <OpListing orgName='Career Analytics' opType='Career Coaching' description="This is a career coaching program."/>
-      </div>
-      </div>
-    </div>
-    );
-  } else {
-    return (
-      <div>
-        <NavigationBar />
-        <div className='DirectoryScreen'>
-        <h1 className="PageHeader">{props.title}</h1>
-        <SearchBar suggestions ={["bat", "bell", "bolt"]} />
-        <br />
-        <div className="DirectoryList">
-        <OpListing orgName='Facebook' opType='Junior Software Engineer' description="This is an internship at an analytics company."/>
-        <OpListing orgName='Coca-Cola' opType='Strategic Analyst' description="This is an interview preparation company."/>
-        <OpListing orgName='Amazon' opType='Summer Internship' description="This is a mentorship program."/>
-        <OpListing orgName='Bank of America' opType='Financial Analyst' description="This is a career coaching program."/>
-        </div>
-        </div>
-      </div>
-      );
-
+class DirectoryScreen extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: props.title,
+      ops: []
+    };
   }
-}
+  renderOps = async() => {
+    const response = await fetch(`http://localhost:3001/api/organizations`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
+    const ops = await response.json()
+    let opsArray = []
+    Object.keys(ops).forEach(function (key){
+      opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
+    })
+
+    this.setState({
+      ops: opsArray
+    });
+  }
+  renderJobs = async() => {
+    const response = await fetch(`http://localhost:3001/api/jobopportunities`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
+    const ops = await response.json()
+    let opsArray = []
+    Object.keys(ops).forEach(function (key){
+      opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} />);
+    })
+  
+    this.setState({
+      ops: opsArray
+    });
+  }
+  componentDidMount() {
+    if (this.state.title == "Professional Development Opportunities") {
+      this.renderOps();
+    } else {
+      this.renderJobs();
+    }
+  }
+  render() {
+    //const ops = this.state.ops?.map((op, i) => (
+      //console.log(op)
+    //));
+        return (
+          <div>
+            <NavigationBar />
+            <div className='DirectoryScreen'>
+            <h1 className="PageHeader">{this.state.title}</h1>
+            <SearchBar suggestions = {["bat", "bell", "bolt"]}/>
+            <br />
+            <div className="DirectoryList">
+            {this.state.ops}
+            </div>
+            </div>
+          </div>
+          );    
+    }
+  }
 
 class SearchBar extends React.Component {
   constructor(props) {
