@@ -93,7 +93,7 @@ function DirectoryScreen(props) {
       <NavigationBar />
       <div className='DirectoryScreen'>
       <h1 className="PageHeader">{props.title}</h1>
-      <SearchBar />
+      <SearchBar suggestions = {["bat", "bell", "bolt"]}/>
       <br />
       <div className="DirectoryList">
       <OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>
@@ -110,7 +110,7 @@ function DirectoryScreen(props) {
         <NavigationBar />
         <div className='DirectoryScreen'>
         <h1 className="PageHeader">{props.title}</h1>
-        <SearchBar />
+        <SearchBar suggestions ={["bat", "bell", "bolt"]} />
         <br />
         <div className="DirectoryList">
         <OpListing orgName='Facebook' opType='Junior Software Engineer' description="This is an internship at an analytics company."/>
@@ -126,13 +126,71 @@ function DirectoryScreen(props) {
 }
 
 class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeSuggestion: 0,
+      filteredSuggestions: [],
+      showSuggestions: false,
+      userInput: ""
+    };
+  }
+  onClick = e => {
+    this.setState({
+      activeSuggestion: 0,
+      filteredSuggestions: [],
+      showSuggestions: false,
+      userInput: e.currentTarget.innerText
+    });
+  };
   onSubmit() {
 
   }
-  handleChange() {
+  handleChange = e => {
+    const { suggestions } = this.props;
+    const userInput = e.currentTarget.value;
+  
+    const filteredSuggestions = suggestions.filter(
+      suggestion =>
+        suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1 && userInput == suggestion.substring(0, userInput.length)
+    );
+  
+    this.setState({
+      activeSuggestion: 0,
+      filteredSuggestions,
+      showSuggestions: true,
+      userInput: e.currentTarget.value
+    });
 
   }
   render () {
+    const {
+      handleChange,
+      onClick,
+      state: {
+        activeSuggestion,
+        filteredSuggestions,
+        showSuggestions,
+        userInput
+      }
+    } = this;
+    let suggestionsListComponent;
+    if (showSuggestions && userInput) {
+      if (filteredSuggestions.length) {
+        suggestionsListComponent = (
+          <ul class="suggestions">
+            {filteredSuggestions.map((suggestion, index) => {
+              
+              return (
+                <li  key={suggestion} onClick={onClick}>
+                  {suggestion}
+                </li>
+              );
+            })}
+          </ul>
+        );
+      } 
+    }
     return (
       <div className="LogIn">
         <form>
@@ -140,11 +198,13 @@ class SearchBar extends React.Component {
             Search Directory
             <br />
             <br />
-            <input type="query" name="query" onChange={this.handleChange} />
+            <input type="query" name="query" onChange={handleChange} value={userInput}/>
           </label>
+          {suggestionsListComponent}
           <button className="ProfileButton" alt="Button to search through postings."
             onClick={this.onSubmit}>Search</button>
         </form>
+
         </div>
     ); // end return
   } // end render()
