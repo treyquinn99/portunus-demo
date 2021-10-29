@@ -72,6 +72,7 @@ router.post('/login', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const email = req.query.myparam1;
+  console.log('email = ' + email);
   User.findOne({"email": email}).then(user => {
     res.json(user);
     })

@@ -7,7 +7,7 @@ import profilePlaceholder from "./ProfilePlaceholder.png";
 import portunusLogo from "./portunus_logo.png";
 
 var userLoggedIn = false;
-
+var searchInput = ''
 
 class NavigationBar extends React.Component {
   loadUserProfile() {
@@ -87,71 +87,81 @@ class OpListing extends React.Component {
   }
 }
 
-class DirectoryScreen extends React.Component{
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: props.title,
-      ops: []
-    };
+function professionalDevelopmentData(props){
+  if(searchInput == "Internship Analytics Company"){
+    return (<OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>)
   }
-  renderOps = async() => {
-    const response = await fetch(`http://localhost:3001/api/organizations`, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json'},
-    });
-    const ops = await response.json()
-    let opsArray = []
-    Object.keys(ops).forEach(function (key){
-      opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
-    })
+  else if(searchInput == "Interview Preparation Company"){
+    return  <OpListing orgName='Interview Preparation Company' opType='Workshop' description="This is an interview preparation company."/>
 
-    this.setState({
-      ops: opsArray
-    });
   }
-  renderJobs = async() => {
-    const response = await fetch(`http://localhost:3001/api/jobopportunities`, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json'},
-    });
-    const ops = await response.json()
-    let opsArray = []
-    Object.keys(ops).forEach(function (key){
-      opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} />);
-    })
-  
-    this.setState({
-      ops: opsArray
-    });
+  else if(searchInput == "Women in STEM"){
+    return <OpListing orgName='Women in STEM' opType='Mentorship Program' description="This is a mentorship program."/>
   }
-  componentDidMount() {
-    if (this.state.title == "Professional Development Opportunities") {
-      this.renderOps();
-    } else {
-      this.renderJobs();
-    }
+  else if(searchInput == "Career Analytics"){
+    return <OpListing orgName='Career Analytics' opType='Career Coaching' description="This is a career coaching program."/>
   }
-  render() {
-    //const ops = this.state.ops?.map((op, i) => (
-      //console.log(op)
-    //));
-        return (
-          <div>
-            <NavigationBar />
-            <div className='DirectoryScreen'>
-            <h1 className="PageHeader">{this.state.title}</h1>
-            <SearchBar suggestions = {["bat", "bell", "bolt"]}/>
-            <br />
-            <div className="DirectoryList">
-            {this.state.ops}
-            </div>
-            </div>
-          </div>
-          );    
-    }
+  return(
+    <div className="DirectoryList">
+    <OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>
+    <OpListing orgName='Interview Preparation Company' opType='Workshop' description="This is an interview preparation company."/>
+    <OpListing orgName='Women in STEM' opType='Mentorship Program' description="This is a mentorship program."/>
+    <OpListing orgName='Career Analytics' opType='Career Coaching' description="This is a career coaching program."/>
+    </div>);
+}
+function jobOpportunities(props){
+  if(searchInput == "Junior Software Engineer"){
+    return (<OpListing orgName='Facebook' opType='Junior Software Engineer' description="This is an internship at an analytics company."/>)
   }
+  else if(searchInput == "Strategic Analyst"){
+    return <OpListing orgName='Coca-Cola' opType='Strategic Analyst' description="This is an interview preparation company."/>
+  }
+  else if(searchInput == "Summer Internship"){
+    return <OpListing orgName='Amazon' opType='Summer Internship' description="This is a mentorship program."/>
+  }
+  else if(searchInput == "Financial Analyst"){
+    return <OpListing orgName='Bank of America' opType='Financial Analyst' description="This is a career coaching program."/>
+  }
+  return(
+    <div className="DirectoryList">
+    <OpListing orgName='Facebook' opType='Junior Software Engineer' description="This is an internship at an analytics company."/>
+    <OpListing orgName='Coca-Cola' opType='Strategic Analyst' description="This is an interview preparation company."/>
+    <OpListing orgName='Amazon' opType='Summer Internship' description="This is a mentorship program."/>
+    <OpListing orgName='Bank of America' opType='Financial Analyst' description="This is a career coaching program."/>
+  </div>);
+}
 
+function DirectoryScreen(props) {
+
+  if (props.title == "Professional Development Opportunities") {
+    return (
+    <div>
+      <NavigationBar />
+      <div className='DirectoryScreen'>
+      <h1 className="PageHeader">{props.title}</h1>
+      <SearchBar suggestions = {["Internship Analytics Company", "Interview Preparation Company", "Women in STEM","Career Analytics"]}/>
+      <br />
+      {professionalDevelopmentData()}
+      {searchInput = ""}
+      </div>
+    </div>
+    );
+  } else {
+    return (
+      <div>
+        <NavigationBar />
+        <div className='DirectoryScreen'>
+        <h1 className="PageHeader">{props.title}</h1>
+        <SearchBar suggestions ={["Junior Software Engineer", "Strategic Analyst", "Summer Internship", "Bank of America"]} />
+        <br />
+        {jobOpportunities()}
+        {searchInput = ""}
+        </div>
+      </div>
+      );
+
+  }
+}
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
@@ -167,11 +177,23 @@ class SearchBar extends React.Component {
       activeSuggestion: 0,
       filteredSuggestions: [],
       showSuggestions: false,
-      userInput: e.currentTarget.innerText
+      userInput: e.currentTarget.innerText,
     });
+    searchInput = e.currentTarget.innerText
+    console.log(searchInput);
   };
   onSubmit() {
-
+    if(searchInput == ''){
+      return;
+    }
+    if(searchInput == "Internship Analytics Company" ||searchInput == "Interview Preparation Company"||searchInput == "IWomen in STEM"||searchInput == "Career Analytics" ){
+      ReactDOM.unmountComponentAtNode(document.getElementById('root'))
+      ReactDOM.render(<DirectoryScreen title="Professional Development Opportunities"/>, document.getElementById('root'));
+    }
+    else{
+    ReactDOM.unmountComponentAtNode(document.getElementById('root'))
+    ReactDOM.render(<DirectoryScreen title="Job Opportunities"/>, document.getElementById('root'));
+    }
   }
   handleChange = e => {
     const { suggestions } = this.props;
@@ -205,7 +227,7 @@ class SearchBar extends React.Component {
     if (showSuggestions && userInput) {
       if (filteredSuggestions.length) {
         suggestionsListComponent = (
-          <ul class="suggestions">
+          <ul className="suggestions">
             {filteredSuggestions.map((suggestion, index) => {
               
               return (
@@ -228,7 +250,7 @@ class SearchBar extends React.Component {
             <input type="query" name="query" onChange={handleChange} value={userInput}/>
           </label>
           {suggestionsListComponent}
-          <button className="ProfileButton" alt="Button to search through postings."
+          <button className="ProfileButton" alt="Button to search through postings." type = "button"
             onClick={this.onSubmit}>Search</button>
         </form>
 
