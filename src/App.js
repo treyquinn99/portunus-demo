@@ -391,10 +391,13 @@ class LogIn extends React.Component {
     this.state = {
       email:'',
       password:'',
+      loginError:'',
+      emailError:'',
     };     
     this.onSubmit = this.onClickHandler.bind(this);
   }
   handleChange = e => {
+    
     this.setState({ [e.target.name]: e.target.value });
   };
   onClickHandler = e => {
@@ -418,6 +421,15 @@ class LogIn extends React.Component {
           .then(data => {
             ReactDOM.render(<ProfilePage name = {data.name} collegeYear = {data.collegeYear} major = {data.major} />, document.getElementById('root'));
           })
+        }
+        else{
+          let check = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          if(check.test(this.state.email) == false){
+            this.setState({loginError: "Please enter a valid email address"})
+          }
+          else {
+             this.setState({loginError: "The email or password is incorrect"})
+          }
         }
       })
     }
@@ -445,6 +457,7 @@ class LogIn extends React.Component {
           </label>
           <br />
           <br />
+          <p style={{ color: 'red' }}>{this.state.loginError}</p>
           <button className="ProfileButton" alt="Button to submit profile information."
             onClick={this.onSubmit}>Submit</button>
         </form>
