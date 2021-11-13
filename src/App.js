@@ -8,6 +8,7 @@ import portunusLogo from "./portunus_logo.png";
 
 var userLoggedIn = false;
 var searchInput = ''
+var globalEmail = ''
 
 class NavigationBar extends React.Component {
   loadUserProfile() {
@@ -265,13 +266,15 @@ class ProfilePage extends React.Component {
     this.state = {
       name: props.name,
       collegeYear: props.collegeYear,
-      major: props.major
+      major: props.major,
+      followedJobs: props.followedJobs,
+      email: props.email
     };
     this.onClickHandler = this.onClickHandler.bind(this)
   }
 
   onClickHandler() {
-    console.log(this.state)
+    console.log(globalEmail)
     ReactDOM.render(<EditProfile name = {this.state.name} collegeYear = {this.state.collegeYear} major = {this.state.major} />, document.getElementById('root'));
   }
   onClickHandlerLogIn() {
@@ -347,15 +350,24 @@ class OrganizationPage extends React.Component {
     super(props);
     this.state = {
       name: props.name,
-      description: props.description
+      description: props.description,
+      email: props.email
     };
+    this.onClickHandlerFollowJob = this.onClickHandlerFollowJob.bind(this)
   }
 
   onClickHandlerBack() {
     ReactDOM.render(<DirectoryScreen />, document.getElementById('root'));
   }
-  onClickHandlerFollow() {
-    
+  onClickHandlerFollowJob() {
+    fetch(`http://localhost:3001/api/users/follow/?myparam1=${this.state.name}&myparam2=${globalEmail}`, {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+    })
+      .then(resp => resp.json())
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   render () {
@@ -378,7 +390,7 @@ class OrganizationPage extends React.Component {
           <br />
           </p>
             <button className="ProfileButton" onClick={this.onClickHandlerBack} alt="Button to return to directory.">Back</button>
-            <button className="ProfileButton" onClick={this.onClickHandlerFollow} alt="Button to follow this opportunity.">Follow Opportunity</button>
+            <button className="ProfileButton" onClick={this.onClickHandlerFollowJob} alt="Button to follow this opportunity.">Follow Opportunity</button>
           </div>
         </div>
       ); // end return
@@ -419,7 +431,8 @@ class LogIn extends React.Component {
         })
           .then(resp => resp.json())
           .then(data => {
-            ReactDOM.render(<ProfilePage name = {data.name} collegeYear = {data.collegeYear} major = {data.major} />, document.getElementById('root'));
+            globalEmail = data.email
+            ReactDOM.render(<ProfilePage email = {data.email} name = {data.name} collegeYear = {data.collegeYear} major = {data.major} followedJobs = {data.followedJobs} />, document.getElementById('root'));
           })
         }
         else{
@@ -554,6 +567,7 @@ class CreateNewAccount extends React.Component {
     .then(res => {
       if (res.status === 200) {
         userLoggedIn = true;
+        globalEmail = this.state.email
         ReactDOM.render(<ProfilePage name = {this.state.name} major = {this.state.major} collegeYear = {this.state.collegeYear}  />, document.getElementById('root'));
         this.state = {
           name: '',

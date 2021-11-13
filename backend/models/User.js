@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema({
 	major: {
 		type: String,
 		required: true
+	},
+	followedJobs: {
+		type: Array,
+		required: false
 	}
 });
 

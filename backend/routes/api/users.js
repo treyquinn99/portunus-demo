@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require('../../models/User');
 const {validateLogin, validateNewAccount} = require('../../validation.js');
+const { findOneAndUpdate } = require('../../models/User');
 
 // @route POST api/users/register
 // @description tests users route
@@ -77,6 +78,30 @@ router.get('/:id', (req, res) => {
     res.json(user);
     })
     .catch(err => console.log(err));
+})
+
+router.patch('/follow/', (req, res) => {
+  const filter = { email: req.query.myparam2 }
+  const user = User.findOne(filter).then(user => {
+    if (!Array.isArray(user.followedJobs)) {
+      const doc = User.findOneAndUpdate(filter, {followedJobs: []}).then(user => {
+        let newFollowedJobs = user.followedJobs
+        if (!newFollowedJobs.includes(req.query.myparam1)) {
+          newFollowedJobs.push(req.query.myparam1)
+        }
+        const update = { followedJobs: newFollowedJobs }
+        const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
+      })
+    } else {
+      let newFollowedJobs = user.followedJobs
+      if (!newFollowedJobs.includes(req.query.myparam1)) {
+        newFollowedJobs.push(req.query.myparam1)
+      }
+      const update = { followedJobs: newFollowedJobs }
+      const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
+      }
+    })
+  .catch(err => res.json(err))
 })
 
 module.exports = router;
