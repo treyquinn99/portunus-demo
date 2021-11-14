@@ -88,27 +88,69 @@ class OpListing extends React.Component {
   }
 }
 
-function professionalDevelopmentData(props){
-  if(searchInput == "Internship Analytics Company"){
-    return (<OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>)
+class DirectoryScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: props.title,
+      ops: []
+    }
   }
-  else if(searchInput == "Interview Preparation Company"){
-    return  <OpListing orgName='Interview Preparation Company' opType='Workshop' description="This is an interview preparation company."/>
+  renderOps = async() => {
+    const response = await fetch(`http://localhost:3001/api/organizations`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
+    const ops = await response.json()
+    let opsArray = []
+    Object.keys(ops).forEach(function (key){
+      opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
+    })
+    this.setState({
+      ops: opsArray
+    });
+  }
+  renderJobs = async() => {
+    const response = await fetch(`http://localhost:3001/api/jobopportunities`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
+    const ops = await response.json()
+    let opsArray = []
+    Object.keys(ops).forEach(function (key){
+      opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} />);
+    })
 
+    this.setState({
+      ops: opsArray
+    });
   }
-  else if(searchInput == "Women in STEM"){
-    return <OpListing orgName='Women in STEM' opType='Mentorship Program' description="This is a mentorship program."/>
+  componentDidMount() {
+    if (this.state.title == "Professional Development Opportunities") {
+      this.renderOps();
+    } else {
+      this.renderJobs();
+    }
   }
-  else if(searchInput == "Career Analytics"){
-    return <OpListing orgName='Career Analytics' opType='Career Coaching' description="This is a career coaching program."/>
-  }
-  return(
-    <div className="DirectoryList">
-    <OpListing orgName='Internship Analytics Company' opType='Resume Boosting' description="This is an internship at an analytics company."/>
-    <OpListing orgName='Interview Preparation Company' opType='Workshop' description="This is an interview preparation company."/>
-    <OpListing orgName='Women in STEM' opType='Mentorship Program' description="This is a mentorship program."/>
-    <OpListing orgName='Career Analytics' opType='Career Coaching' description="This is a career coaching program."/>
-    </div>);
+  render() {
+    //const ops = this.state.ops?.map((op, i) => (
+      //console.log(op)
+    //));
+        return (
+          <div>
+            <NavigationBar />
+            <div className='DirectoryScreen'>
+            <h1 className="PageHeader">{this.state.title}</h1>
+            <SearchBar suggestions = {["bat", "bell", "bolt"]}/>
+            <br />
+            <div className="DirectoryList">
+            {this.state.ops}
+            </div>
+            </div>
+          </div>
+          );    
+    }
+
 }
 function jobOpportunities(props){
   if(searchInput == "Junior Software Engineer"){
@@ -132,37 +174,6 @@ function jobOpportunities(props){
   </div>);
 }
 
-function DirectoryScreen(props) {
-
-  if (props.title == "Professional Development Opportunities") {
-    return (
-    <div>
-      <NavigationBar />
-      <div className='DirectoryScreen'>
-      <h1 className="PageHeader">{props.title}</h1>
-      <SearchBar suggestions = {["Internship Analytics Company", "Interview Preparation Company", "Women in STEM","Career Analytics"]}/>
-      <br />
-      {professionalDevelopmentData()}
-      {searchInput = ""}
-      </div>
-    </div>
-    );
-  } else {
-    return (
-      <div>
-        <NavigationBar />
-        <div className='DirectoryScreen'>
-        <h1 className="PageHeader">{props.title}</h1>
-        <SearchBar suggestions ={["Junior Software Engineer", "Strategic Analyst", "Summer Internship", "Bank of America"]} />
-        <br />
-        {jobOpportunities()}
-        {searchInput = ""}
-        </div>
-      </div>
-      );
-
-  }
-}
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
