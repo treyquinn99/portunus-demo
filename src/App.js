@@ -49,23 +49,40 @@ class OpListing extends React.Component {
     this.state = {
       orgName: props.orgName,
       opType: props.opType,
-      description: props.description
+      description: props.description,
+      companyName: props.companyName
     };
     this.onClickHandler = this.onClickHandler.bind(this);
   }
 
   onClickHandler() {
-    fetch(`http://localhost:3001/api/organizations/:id/?myparam1=${this.state.orgName}`, {
-          method: 'GET',
-          headers: {'Content-Type': 'application/json'},
+    if (!this.state.companyName) {
+      fetch(`http://localhost:3001/api/organizations/:id/?myparam1=${this.state.orgName}`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+          })
+           .then(resp => resp.json())
+           .then(data => {
+             console.log(data)
+             ReactDOM.render(<OrganizationPage name = {data.orgName} description = {data.orgDescription} />, document.getElementById('root'));
+            })
+            .catch(err => {
+              console.log(err);
+            })
+    } else {
+      fetch(`http://localhost:3001/api/jobopportunities/:id/?myparam1=${this.state.orgName}`, {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+      })
+       .then(resp => resp.json())
+       .then(data => {
+         console.log(data)
+         ReactDOM.render(<OrganizationPage name = {data.orgName} description = {data.jobDescription} />, document.getElementById('root'));
         })
-          .then(resp => resp.json())
-          .then(data => {
-            ReactDOM.render(<OrganizationPage name = {data.orgName} description = {data.orgDescription} />, document.getElementById('root'));
-          })
-          .catch(err => {
-            console.log(err);
-          })
+        .catch(err => {
+          console.log(err);
+        })
+    }
   }
   
   render() {
@@ -118,7 +135,7 @@ class DirectoryScreen extends React.Component {
     const ops = await response.json()
     let opsArray = []
     Object.keys(ops).forEach(function (key){
-      opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} />);
+      opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} companyName = {true}/>);
     })
 
     this.setState({
@@ -361,7 +378,7 @@ class OrganizationPage extends React.Component {
     super(props);
     this.state = {
       name: props.name,
-      description: props.description,
+      description: props.description || props.jobDescription,
       email: props.email
     };
     this.onClickHandlerFollowJob = this.onClickHandlerFollowJob.bind(this)
