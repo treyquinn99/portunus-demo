@@ -77,7 +77,7 @@ class OpListing extends React.Component {
        .then(resp => resp.json())
        .then(data => {
          console.log(data)
-         ReactDOM.render(<OrganizationPage name = {data.orgName} description = {data.jobDescription} />, document.getElementById('root'));
+         ReactDOM.render(<OrganizationPage name = {data.companyName} description = {data.jobDescription} job = {true}/>, document.getElementById('root'));
         })
         .catch(err => {
           console.log(err);
@@ -379,13 +379,21 @@ class OrganizationPage extends React.Component {
     this.state = {
       name: props.name,
       description: props.description || props.jobDescription,
-      email: props.email
+      email: props.email,
+      job: props.job
     };
     this.onClickHandlerFollowJob = this.onClickHandlerFollowJob.bind(this)
+    this.onClickHandlerBack = this.onClickHandlerBack.bind(this)
   }
 
   onClickHandlerBack() {
-    ReactDOM.render(<DirectoryScreen />, document.getElementById('root'));
+    if (!(this.state.job === undefined)) {
+      ReactDOM.unmountComponentAtNode(document.getElementById('root'))
+      ReactDOM.render(<DirectoryScreen title="Job Opportunities"/>, document.getElementById('root'));
+    } else {
+      ReactDOM.unmountComponentAtNode(document.getElementById('root'))
+      ReactDOM.render(<DirectoryScreen title="Professional Development Opportunities"/>, document.getElementById('root'));
+    }
   }
   onClickHandlerFollowJob() {
     fetch(`http://localhost:3001/api/users/follow/?myparam1=${this.state.name}&myparam2=${globalEmail}`, {
