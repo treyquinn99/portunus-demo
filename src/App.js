@@ -84,7 +84,7 @@ class OpListing extends React.Component {
         })
     }
   }
-  
+
   render() {
   return (
     <div className='OpListing' onClick={this.onClickHandler}>
@@ -165,7 +165,7 @@ class DirectoryScreen extends React.Component {
             </div>
             </div>
           </div>
-          );    
+          );
     }
 
 }
@@ -227,12 +227,12 @@ class SearchBar extends React.Component {
   handleChange = e => {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
-  
+
     const filteredSuggestions = suggestions.filter(
       suggestion =>
         suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1 && userInput == suggestion.substring(0, userInput.length)
     );
-  
+
     this.setState({
       activeSuggestion: 0,
       filteredSuggestions,
@@ -258,7 +258,7 @@ class SearchBar extends React.Component {
         suggestionsListComponent = (
           <ul className="suggestions">
             {filteredSuggestions.map((suggestion, index) => {
-              
+
               return (
                 <li  key={suggestion} onClick={onClick}>
                   {suggestion}
@@ -267,7 +267,7 @@ class SearchBar extends React.Component {
             })}
           </ul>
         );
-      } 
+      }
     }
     return (
       <div className="LogIn">
@@ -349,7 +349,7 @@ class ProfilePage extends React.Component {
         <div>
           <NavigationBar />
           <div className="UserProfile">
-          <h1 className="PageHeader">User Profile</h1>
+          <h1 className="PageHeader">Welcome</h1>
           <br />
           <img className="ProfilePicture"
             src={profilePlaceholder}
@@ -441,11 +441,11 @@ class LogIn extends React.Component {
       password:'',
       loginError:'',
       emailError:'',
-    };     
+    };
     this.onSubmit = this.onClickHandler.bind(this);
   }
   handleChange = e => {
-    
+
     this.setState({ [e.target.name]: e.target.value });
   };
   onClickHandler = e => {
