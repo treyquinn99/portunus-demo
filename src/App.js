@@ -205,15 +205,17 @@ class DirectoryScreen extends React.Component {
   }
   render() {
     let suggestedNames = []
-    if (this.state.title === "Professional Development Opportunities") {
-      this.state.ops.forEach((op) => {
-        suggestedNames.push(op.props.orgName);
-      }) 
-    } else {
-      this.state.ops.forEach((op) => {
-        suggestedNames.push(op.props.companyName)
-      })
-    }
+    if (this.state.favorite === undefined ) {
+      if (this.state.title === "Professional Development Opportunities") {
+        this.state.ops.forEach((op) => {
+          suggestedNames.push(op.props.orgName);
+        }) 
+      } else {
+        this.state.ops.forEach((op) => {
+          suggestedNames.push(op.props.companyName)
+        })
+      }
+    } 
         return (
           <div>
             <NavigationBar />
