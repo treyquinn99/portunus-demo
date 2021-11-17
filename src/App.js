@@ -12,7 +12,14 @@ var globalEmail = ''
 
 class NavigationBar extends React.Component {
   loadUserProfile() {
-    ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+    fetch(`http://localhost:3001/api/users/:id/?myparam1=${globalEmail}`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        ReactDOM.render(<ProfilePage email = {data.email} name = {data.name} collegeYear = {data.collegeYear} major = {data.major} followedJobs = {data.followedJobs} followedOps = {data.followedOps} />, document.getElementById('root'));
+      })
   }
   loadPDDirectory() {
     ReactDOM.unmountComponentAtNode(document.getElementById('root'))
@@ -110,41 +117,62 @@ class DirectoryScreen extends React.Component {
     super(props);
     this.state = {
       title: props.title,
-      ops: []
+      ops: props.ops ? props.ops : [],
+      favorite: props.favorite
     }
   }
-  renderOps = async() => {
+  renderOps = async(filter) => {
     const response = await fetch(`http://localhost:3001/api/organizations`, {
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
     });
     const ops = await response.json()
     let opsArray = []
-    Object.keys(ops).forEach(function (key){
-      opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
-    })
+    if (filter === undefined) {
+      Object.keys(ops).forEach(function (key){
+        opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
+      })
+    } else {
+      Object.keys(ops).forEach(function (key){
+        if (filter.includes(ops[key].orgName)) {
+          opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
+        }
+      })
+    }
     this.setState({
       ops: opsArray
     });
   }
-  renderJobs = async() => {
+  renderJobs = async(filter) => {
     const response = await fetch(`http://localhost:3001/api/jobopportunities`, {
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
     });
     const ops = await response.json()
     let opsArray = []
-    Object.keys(ops).forEach(function (key){
-      opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} companyName = {true}/>);
-    })
-
+    if (filter === undefined) {
+      Object.keys(ops).forEach(function (key){
+        opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} companyName = {true}/>);
+      })
+    } else {
+      Object.keys(ops).forEach(function (key) {
+        if (filter.includes(ops[key].companyName)) {
+          opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} companyName = {true}/>);
+        }
+      })
+    }
+ 
     this.setState({
       ops: opsArray
     });
   }
   componentDidMount() {
-    if (this.state.title == "Professional Development Opportunities") {
+    if (!(this.state.favorite === undefined) && (this.state.title == "Professional Development Opportunities")) {
+      this.renderOps(this.state.ops);
+    } else if (this.state.title == "Professional Development Opportunities") {
       this.renderOps();
+    } else if (!(this.state.favorite === undefined) && (this.state.title === "Job Opportunities")) {
+      this.renderJobs(this.state.ops);
     } else {
       this.renderJobs();
     }
@@ -296,9 +324,12 @@ class ProfilePage extends React.Component {
       collegeYear: props.collegeYear,
       major: props.major,
       followedJobs: props.followedJobs,
-      email: props.email
+      email: props.email,
+      followedOps: props.followedOps
     };
     this.onClickHandler = this.onClickHandler.bind(this)
+    this.onClickHandlerViewJobs = this.onClickHandlerViewJobs.bind(this)
+    this.onClickHandlerViewOps = this.onClickHandlerViewOps.bind(this)
   }
 
   onClickHandler() {
@@ -314,6 +345,26 @@ class ProfilePage extends React.Component {
   }
   onClickHandlerCreateNewAccount() {
     ReactDOM.render(<CreateNewAccount />, document.getElementById('root'));
+  }
+  onClickHandlerViewJobs() {
+    /**let newOps = []
+    console.log(this.state.followedJobs)
+    for (let x = 0; x < this.state.followedJobs.length; x++) {
+      fetch(`http://localhost:3001/api/jobopportunities/:id/?myparam1=${this.state.followedJobs[x]}`, {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+      })
+       .then(resp => resp.json())
+       .then(data => {console.log(data)
+       })
+    }
+    **/
+    ReactDOM.render(<DirectoryScreen favorite = {true} title="Job Opportunities" ops = {this.state.followedJobs}/>, document.getElementById('root'))
+
+  }
+  onClickHandlerViewOps() {
+    ReactDOM.render(<DirectoryScreen favorite = {true} title="Professional Development Opportunities" ops = {this.state.followedOps}/>, document.getElementById('root'))
+
   }
 
   render () {
@@ -338,8 +389,8 @@ class ProfilePage extends React.Component {
           <br />
           </p>
             <button className="ProfileButton" onClick={this.onClickHandler} alt="Button to edit user profile.">Edit Profile</button>
-            <button className="ProfileButton" alt="Button to view followed job listings.">View Followed Jobs</button>
-            <button className="ProfileButton" alt="Button to view followed professional development opportunities.">View Followed Opportunities</button>
+            <button className="ProfileButton" onClick={this.onClickHandlerViewJobs} alt="Button to view followed job listings.">View Followed Jobs</button>
+            <button className="ProfileButton" onClick={this.onClickHandlerViewOps} alt="Button to view followed professional development opportunities.">View Followed Opportunities</button>
             <button className="ProfileButton" onClick={this.onClickHandlerLogOut} alt="Button to log out.">Log Out</button>
           </div>
         </div>
@@ -468,7 +519,7 @@ class LogIn extends React.Component {
           .then(resp => resp.json())
           .then(data => {
             globalEmail = data.email
-            ReactDOM.render(<ProfilePage email = {data.email} name = {data.name} collegeYear = {data.collegeYear} major = {data.major} followedJobs = {data.followedJobs} />, document.getElementById('root'));
+            ReactDOM.render(<ProfilePage email = {data.email} name = {data.name} collegeYear = {data.collegeYear} major = {data.major} followedJobs = {data.followedJobs} followedOps = {data.followedOps} />, document.getElementById('root'));
           })
         }
         else{

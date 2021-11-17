@@ -7,6 +7,7 @@ const router = express.Router();
 const User = require('../../models/User');
 const {validateLogin, validateNewAccount} = require('../../validation.js');
 const { findOneAndUpdate } = require('../../models/User');
+const JobOpportunity = require('../../models/JobOpportunity');
 
 // @route POST api/users/register
 // @description tests users route
@@ -82,26 +83,58 @@ router.get('/:id', (req, res) => {
 
 router.patch('/follow/', (req, res) => {
   const filter = { email: req.query.myparam2 }
-  const user = User.findOne(filter).then(user => {
-    if (!Array.isArray(user.followedJobs)) {
-      const doc = User.findOneAndUpdate(filter, {followedJobs: []}).then(user => {
-        let newFollowedJobs = user.followedJobs
-        if (!newFollowedJobs.includes(req.query.myparam1)) {
-          newFollowedJobs.push(req.query.myparam1)
-        }
-        const update = { followedJobs: newFollowedJobs }
-        const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
-      })
-    } else {
-      let newFollowedJobs = user.followedJobs
-      if (!newFollowedJobs.includes(req.query.myparam1)) {
-        newFollowedJobs.push(req.query.myparam1)
-      }
-      const update = { followedJobs: newFollowedJobs }
-      const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
-      }
-    })
-  .catch(err => res.json(err))
+  console.log(filter)
+  console.log(req.query.myparam1)
+  JobOpportunity.findOne({"companyName": req.query.myparam1}, function (err, job) {
+    console.log("returning")
+    console.log(err)
+    console.log(job)
+    if (!job) {
+      console.log("followOps")
+      const user = User.findOne(filter).then(user => {
+        if (!Array.isArray(user.followedOps)) {
+          const doc = User.findOneAndUpdate(filter, {followedOps: []}).then(user => {
+            let newFollowedOps = user.followedOps
+            if (!newFollowedOps.includes(req.query.myparam1)) {
+              newFollowedOps.push(req.query.myparam1)
+            }
+            const update = { followedJobs: newFollowedJobs }
+            const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
+          })
+        } else {
+          let newFollowedOps = user.followedOps
+          if (!newFollowedOps.includes(req.query.myparam1)) {
+            newFollowedOps.push(req.query.myparam1)
+          }
+          const update = { followedOps: newFollowedOps }
+          const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
+          }
+        })
+        .catch(err => res.json(err))
+    } else if (job) {
+      console.log("followJob")
+      const user = User.findOne(filter).then(user => {
+        if (!Array.isArray(user.followedJobs)) {
+          const doc = User.findOneAndUpdate(filter, {followedJobs: []}).then(user => {
+            let newFollowedJobs = user.followedJobs
+            if (!newFollowedJobs.includes(req.query.myparam1)) {
+              newFollowedJobs.push(req.query.myparam1)
+            }
+            const update = { followedJobs: newFollowedJobs }
+            const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
+          })
+        } else {
+          let newFollowedJobs = user.followedJobs
+          if (!newFollowedJobs.includes(req.query.myparam1)) {
+            newFollowedJobs.push(req.query.myparam1)
+          }
+          const update = { followedJobs: newFollowedJobs }
+          const doc = User.findOneAndUpdate(filter, update).then(res.json(update))
+          }
+        })
+      .catch(err => res.json(err))
+    }
+  })
 })
 
 module.exports = router;

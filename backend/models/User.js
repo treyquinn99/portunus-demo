@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema({
 	followedJobs: {
 		type: Array,
 		required: false
+	},
+	followedOps: {
+		type: Array,
+		required: false
 	}
 });
 
