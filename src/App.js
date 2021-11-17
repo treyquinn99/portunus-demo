@@ -12,14 +12,18 @@ var globalEmail = ''
 
 class NavigationBar extends React.Component {
   loadUserProfile() {
-    fetch(`http://localhost:3001/api/users/:id/?myparam1=${globalEmail}`, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json'},
-    })
-      .then(resp => resp.json())
-      .then(data => {
-        ReactDOM.render(<ProfilePage email = {data.email} name = {data.name} collegeYear = {data.collegeYear} major = {data.major} followedJobs = {data.followedJobs} followedOps = {data.followedOps} />, document.getElementById('root'));
+    if (userLoggedIn) {
+      fetch(`http://localhost:3001/api/users/:id/?myparam1=${globalEmail}`, {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
       })
+        .then(resp => resp.json())
+        .then(data => {
+          ReactDOM.render(<ProfilePage email = {data.email} name = {data.name} collegeYear = {data.collegeYear} major = {data.major} followedJobs = {data.followedJobs} followedOps = {data.followedOps} />, document.getElementById('root'));
+        })
+    } else {
+      ReactDOM.render(<ProfilePage />, document.getElementById('root'));
+    }
   }
   loadPDDirectory() {
     ReactDOM.unmountComponentAtNode(document.getElementById('root'))
@@ -118,7 +122,8 @@ class DirectoryScreen extends React.Component {
     this.state = {
       title: props.title,
       ops: props.ops ? props.ops : [],
-      favorite: props.favorite
+      favorite: props.favorite,
+      searchTerm: props.searchTerm
     }
   }
   renderOps = async(filter) => {
@@ -132,12 +137,19 @@ class DirectoryScreen extends React.Component {
       Object.keys(ops).forEach(function (key){
         opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
       })
-    } else {
+    } else if (Array.isArray(filter)) {
       Object.keys(ops).forEach(function (key){
         if (filter.includes(ops[key].orgName)) {
           opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
         }
       })
+    } else {
+      Object.keys(ops).forEach(function (key){
+        if ((ops[key].orgName).toLowerCase().includes(filter.toLowerCase())) {
+          opsArray.push(<OpListing key = {key} orgName = {ops[key].orgName} opType = {ops[key].opType} description = {ops[key].opType} />);
+        }
+      })
+
     }
     this.setState({
       ops: opsArray
@@ -154,12 +166,19 @@ class DirectoryScreen extends React.Component {
       Object.keys(ops).forEach(function (key){
         opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} companyName = {true}/>);
       })
-    } else {
+    } else if (Array.isArray(filter)) {
       Object.keys(ops).forEach(function (key) {
         if (filter.includes(ops[key].companyName)) {
           opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} companyName = {true}/>);
         }
       })
+    } else {
+      Object.keys(ops).forEach(function (key){
+        if ((ops[key].companyName).toLowerCase().includes(filter.toLowerCase())) {
+          opsArray.push(<OpListing key = {key} orgName = {ops[key].companyName} opType = {ops[key].jobTitle} description = {ops[key].jobDescription} />);
+        }
+      })
+      
     }
  
     this.setState({
@@ -167,26 +186,40 @@ class DirectoryScreen extends React.Component {
     });
   }
   componentDidMount() {
+    console.log("mont")
+    console.log(this.state.searchTerm)
     if (!(this.state.favorite === undefined) && (this.state.title == "Professional Development Opportunities")) {
       this.renderOps(this.state.ops);
-    } else if (this.state.title == "Professional Development Opportunities") {
-      this.renderOps();
     } else if (!(this.state.favorite === undefined) && (this.state.title === "Job Opportunities")) {
       this.renderJobs(this.state.ops);
+    } else if (this.state.title === "Professional Development Opportunities" && !(this.state.searchTerm === undefined)) {
+      this.renderOps(this.state.searchTerm);
+    } else if (this.state.title === "Job Opportunities" && !(this.state.searchTerm === undefined)) {
+      console.log(this.state.searchTerm)
+      this.renderJobs(this.state.searchTerm);
+    } else if (this.state.title === "Job Opportunities") {
+      this.renderJobs()
     } else {
-      this.renderJobs();
+      this.renderOps()
     }
   }
   render() {
-    //const ops = this.state.ops?.map((op, i) => (
-      //console.log(op)
-    //));
+    let suggestedNames = []
+    if (this.state.title === "Professional Development Opportunities") {
+      this.state.ops.forEach((op) => {
+        suggestedNames.push(op.props.orgName);
+      }) 
+    } else {
+      this.state.ops.forEach((op) => {
+        suggestedNames.push(op.props.companyName)
+      })
+    }
         return (
           <div>
             <NavigationBar />
             <div className='DirectoryScreen'>
             <h1 className="PageHeader">{this.state.title}</h1>
-            <SearchBar suggestions = {["bat", "bell", "bolt"]}/>
+            <SearchBar title = {this.state.title} suggestions = {suggestedNames}/>
             <br />
             <div className="DirectoryList">
             {this.state.ops}
@@ -197,27 +230,7 @@ class DirectoryScreen extends React.Component {
     }
 
 }
-function jobOpportunities(props){
-  if(searchInput == "Junior Software Engineer"){
-    return (<OpListing orgName='Facebook' opType='Junior Software Engineer' description="This is an internship at an analytics company."/>)
-  }
-  else if(searchInput == "Strategic Analyst"){
-    return <OpListing orgName='Coca-Cola' opType='Strategic Analyst' description="This is an interview preparation company."/>
-  }
-  else if(searchInput == "Summer Internship"){
-    return <OpListing orgName='Amazon' opType='Summer Internship' description="This is a mentorship program."/>
-  }
-  else if(searchInput == "Financial Analyst"){
-    return <OpListing orgName='Bank of America' opType='Financial Analyst' description="This is a career coaching program."/>
-  }
-  return(
-    <div className="DirectoryList">
-    <OpListing orgName='Facebook' opType='Junior Software Engineer' description="This is an internship at an analytics company."/>
-    <OpListing orgName='Coca-Cola' opType='Strategic Analyst' description="This is an interview preparation company."/>
-    <OpListing orgName='Amazon' opType='Summer Internship' description="This is a mentorship program."/>
-    <OpListing orgName='Bank of America' opType='Financial Analyst' description="This is a career coaching program."/>
-  </div>);
-}
+
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -226,8 +239,10 @@ class SearchBar extends React.Component {
       activeSuggestion: 0,
       filteredSuggestions: [],
       showSuggestions: false,
-      userInput: ""
+      userInput: "",
+      title: props.title
     };
+    this.onSubmit = this.onSubmit.bind(this)
   }
   onClick = e => {
     this.setState({
@@ -240,17 +255,10 @@ class SearchBar extends React.Component {
     console.log(searchInput);
   };
   onSubmit() {
-    if(searchInput == ''){
-      return;
-    }
-    if(searchInput == "Internship Analytics Company" ||searchInput == "Interview Preparation Company"||searchInput == "IWomen in STEM"||searchInput == "Career Analytics" ){
-      ReactDOM.unmountComponentAtNode(document.getElementById('root'))
-      ReactDOM.render(<DirectoryScreen title="Professional Development Opportunities"/>, document.getElementById('root'));
-    }
-    else{
+    console.log(this.state.userInput)
     ReactDOM.unmountComponentAtNode(document.getElementById('root'))
-    ReactDOM.render(<DirectoryScreen title="Job Opportunities"/>, document.getElementById('root'));
-    }
+    ReactDOM.render(<DirectoryScreen searchTerm = {this.state.userInput} title={this.state.title} />, document.getElementById('root'))
+
   }
   handleChange = e => {
     const { suggestions } = this.props;
@@ -258,7 +266,7 @@ class SearchBar extends React.Component {
 
     const filteredSuggestions = suggestions.filter(
       suggestion =>
-        suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1 && userInput == suggestion.substring(0, userInput.length)
+        suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1 && userInput.toLowerCase() === suggestion.toLowerCase().substring(0, userInput.length)
     );
 
     this.setState({
