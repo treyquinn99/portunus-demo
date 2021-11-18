@@ -314,7 +314,9 @@ class SearchBar extends React.Component {
             <br />
             <input type="query" name="query" onChange={handleChange} value={userInput}/>
           </label>
+          <br />
           {suggestionsListComponent}
+          <br />
           <button className="ProfileButton" alt="Button to search through postings." type = "button"
             onClick={this.onSubmit}>Search</button>
         </form>
