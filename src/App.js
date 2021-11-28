@@ -1,8 +1,9 @@
 /** 
-  App.js
- Import React and ReactSom Libraries
+  *This file creates interactive User Interface for Portunus
+  *created in src folder
 */
 
+//Import React and ReactDom Libraries
 
 import './App.css';
 import React, { useCallback } from 'react';
@@ -12,16 +13,18 @@ import logo from './logo-placeholder.png'
 import profilePlaceholder from "./ProfilePlaceholder.png";
 import portunusLogo from "./portunus_logo.png";
 
-/** true if user is logged in */
 var userLoggedIn = false;
 var searchInput = ''
 var globalEmail = ''
 
-/*Displays Navigation Bar which includes 'User Profile', 'Professional Development Opportunities', and 'Job Opportunities'*/
+/**
+ * @description Displays Navigation Bar
+ * @return navigation bar with the following buttons: 'User Profile', 'Professional Development Opportunities', 'Job Opportunities'
+*/
 class NavigationBar extends React.Component {
   loadUserProfile() {
     if (userLoggedIn) {
-      /*API call to fetch user's data from the backend*/
+      //API call to fetch user's data from the backend
       fetch(`http://localhost:3001/api/users/:id/?myparam1=${globalEmail}`, {
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
@@ -62,8 +65,10 @@ class NavigationBar extends React.Component {
   }
 }
 
-{/*renders Opportunity's page from the Database*/}
-
+/**
+ * @description Displays an Opportunity listing
+ * @return Opportunity's page with data fetched with an API call
+*/
 class OpListing extends React.Component {
 
   constructor(props) {
@@ -127,7 +132,10 @@ class OpListing extends React.Component {
   );
   }
 }
-
+/**
+ * @description DirectoryScreen displays Directory Screen
+ * @return Job Opportunities Directory or Organizations Directory based on what the user selects from the navigation bar.
+*/
 class DirectoryScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -240,7 +248,10 @@ class DirectoryScreen extends React.Component {
     }
 
 }
-
+/**
+ * @description Displays Search Bar
+ * @return search bar with gives autofill suggestions to the user
+*/
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
@@ -334,7 +345,10 @@ class SearchBar extends React.Component {
     ); // end return
   } // end render()
 }
-/*Displays Profile page of the user */
+/**
+ * @description ProfilePage allows the user to view their profile page
+ * @return users profile page with their basic information(Name, Major, College Year and profile picture)
+*/
 class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
@@ -431,7 +445,10 @@ class ProfilePage extends React.Component {
   } // end render()
 } // end ProfilePage
 
-/*Displays Organization Page*/
+/**
+ * @description OrganizationPage displays an Organization's Page fetched with a API call
+ * @return Organization's information including its name, description, email, and job
+*/
 class OrganizationPage extends React.Component {
   constructor(props) {
     super(props);
@@ -492,7 +509,10 @@ class OrganizationPage extends React.Component {
       ); // end return
   } // end render()
 } // end OrganizationPage
-
+/**
+ * @description LogIn lets user log into their account after verifying their credentials.
+ * @return Form where the user can enter their email and password.
+*/
 class LogIn extends React.Component {
   constructor(props) {
     super(props);
@@ -580,8 +600,10 @@ class LogIn extends React.Component {
 } // end LogIn
 
 
-/**EditProfile page lets users edit their profile: 
- * Edit Name, Colloege Year or Major
+
+/**
+ * @description EditProfile page lets users edit their profile
+ * @return Form where user can change their Profile information
 */
 class EditProfile extends React.Component {
   constructor(props) {
@@ -639,7 +661,10 @@ class EditProfile extends React.Component {
   } // end render()
 } // end EditProfile
 
-/*Displays Create New Account page where users can create their account with Name, Email, Password, College Year, and Major*/
+/**
+ * @description CreateNewAccount lets a new user create an account
+ * @return Form where the user can enter their email, password, collegeYear, major, nameError, passwordError, emailError, collegeYearError, majorError
+*/
 class CreateNewAccount extends React.Component {
   constructor() {
     super();
