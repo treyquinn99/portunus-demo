@@ -1,3 +1,9 @@
+/** 
+  App.js
+ Import React and ReactSom Libraries
+*/
+
+
 import './App.css';
 import React, { useCallback } from 'react';
 import ReactDOM from 'react-dom';
@@ -6,13 +12,16 @@ import logo from './logo-placeholder.png'
 import profilePlaceholder from "./ProfilePlaceholder.png";
 import portunusLogo from "./portunus_logo.png";
 
+/** true if user is logged in */
 var userLoggedIn = false;
 var searchInput = ''
 var globalEmail = ''
 
+/*Displays Navigation Bar which includes 'User Profile', 'Professional Development Opportunities', and 'Job Opportunities'*/
 class NavigationBar extends React.Component {
   loadUserProfile() {
     if (userLoggedIn) {
+      /*API call to fetch user's data from the backend*/
       fetch(`http://localhost:3001/api/users/:id/?myparam1=${globalEmail}`, {
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
@@ -53,6 +62,8 @@ class NavigationBar extends React.Component {
   }
 }
 
+{/*renders Opportunity's page from the Database*/}
+
 class OpListing extends React.Component {
 
   constructor(props) {
@@ -68,6 +79,7 @@ class OpListing extends React.Component {
 
   onClickHandler() {
     if (!this.state.companyName) {
+      /*API call to fetch organization's data from the backend*/
       fetch(`http://localhost:3001/api/organizations/:id/?myparam1=${this.state.orgName}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
@@ -81,6 +93,7 @@ class OpListing extends React.Component {
               console.log(err);
             })
     } else {
+      /*API call to fetch job opportunity's data from the backend*/
       fetch(`http://localhost:3001/api/jobopportunities/:id/?myparam1=${this.state.orgName}`, {
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
@@ -95,8 +108,9 @@ class OpListing extends React.Component {
         })
     }
   }
-
+  
   render() {
+    /* renders the opportunity listing*/
   return (
     <div className='OpListing' onClick={this.onClickHandler}>
                 <img
@@ -229,7 +243,6 @@ class DirectoryScreen extends React.Component {
 
 }
 
-
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
@@ -252,21 +265,21 @@ class SearchBar extends React.Component {
     searchInput = e.currentTarget.innerText
     console.log(searchInput);
   };
+  /* renders opportunity that the user entered */
   onSubmit() {
     console.log(this.state.userInput)
     ReactDOM.unmountComponentAtNode(document.getElementById('root'))
     ReactDOM.render(<DirectoryScreen searchTerm = {this.state.userInput} title={this.state.title} />, document.getElementById('root'))
 
   }
+  /**Autofill suggestions for input*/
   handleChange = e => {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
-
     const filteredSuggestions = suggestions.filter(
       suggestion =>
         suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1 && userInput.toLowerCase() === suggestion.toLowerCase().substring(0, userInput.length)
     );
-
     this.setState({
       activeSuggestion: 0,
       filteredSuggestions,
@@ -323,7 +336,7 @@ class SearchBar extends React.Component {
     ); // end return
   } // end render()
 }
-
+/*Displays Profile page of the user */
 class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
@@ -355,18 +368,6 @@ class ProfilePage extends React.Component {
     ReactDOM.render(<CreateNewAccount />, document.getElementById('root'));
   }
   onClickHandlerViewJobs() {
-    /**let newOps = []
-    console.log(this.state.followedJobs)
-    for (let x = 0; x < this.state.followedJobs.length; x++) {
-      fetch(`http://localhost:3001/api/jobopportunities/:id/?myparam1=${this.state.followedJobs[x]}`, {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-      })
-       .then(resp => resp.json())
-       .then(data => {console.log(data)
-       })
-    }
-    **/
     ReactDOM.render(<DirectoryScreen favorite = {true} title="Job Opportunities" ops = {this.state.followedJobs}/>, document.getElementById('root'))
 
   }
@@ -432,6 +433,7 @@ class ProfilePage extends React.Component {
   } // end render()
 } // end ProfilePage
 
+/*Displays Organization Page*/
 class OrganizationPage extends React.Component {
   constructor(props) {
     super(props);
@@ -454,6 +456,7 @@ class OrganizationPage extends React.Component {
       ReactDOM.render(<DirectoryScreen title="Professional Development Opportunities"/>, document.getElementById('root'));
     }
   }
+  /*API call to fetch user's followed opportunities from the backend*/
   onClickHandlerFollowJob() {
     fetch(`http://localhost:3001/api/users/follow/?myparam1=${this.state.name}&myparam2=${globalEmail}`, {
       method: 'PATCH',
@@ -509,6 +512,7 @@ class LogIn extends React.Component {
   };
   onClickHandler = e => {
     e.preventDefault();
+    /*API call to fetch user's email and password from the backend*/
     fetch('http://localhost:3001/api/users/login', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -520,6 +524,7 @@ class LogIn extends React.Component {
     .then(res => {
       if (res.status == 200) {
         userLoggedIn = true
+        /*API call to fetch user's information(name,college year, etc.) from the backend*/
         fetch(`http://localhost:3001/api/users/:id/?myparam1=${this.state.email}`, {
           method: 'GET',
           headers: {'Content-Type': 'application/json'},
@@ -530,13 +535,14 @@ class LogIn extends React.Component {
             ReactDOM.render(<ProfilePage email = {data.email} name = {data.name} collegeYear = {data.collegeYear} major = {data.major} followedJobs = {data.followedJobs} followedOps = {data.followedOps} />, document.getElementById('root'));
           })
         }
+        /*check if the entry is valid*/
         else{
           let check = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           if(check.test(this.state.email) == false){
-            this.setState({loginError: "Please enter a valid email address"})
+            this.setState({loginError: "Please enter a valid email address."})
           }
           else {
-             this.setState({loginError: "The email or password is incorrect"})
+             this.setState({loginError: "The email or password is incorrect."})
           }
         }
       })
@@ -575,13 +581,19 @@ class LogIn extends React.Component {
   } // end render()
 } // end LogIn
 
+
+/**EditProfile page lets users edit their profile: 
+ * Edit Name, Colloege Year or Major
+*/
 class EditProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: props.name,
       collegeYear: props.collegeYear,
-      major: props.major
+      major: props.major,
+      Name:'',
+      emailError:'',
     };
     this.onClickHandler = this.onClickHandler.bind(this)
   }
@@ -629,6 +641,7 @@ class EditProfile extends React.Component {
   } // end render()
 } // end EditProfile
 
+/*Displays Create New Account page where users can create their account with Name, Email, Password, College Year, and Major*/
 class CreateNewAccount extends React.Component {
   constructor() {
     super();
@@ -637,7 +650,12 @@ class CreateNewAccount extends React.Component {
       email:'',
       password:'',
       collegeYear:'',
-      major:''
+      major:'',
+      nameError:'',
+      passwordError:'',
+      emailError:'',
+      collegeYearError:'',
+      majorError: '',
     };
     this.onSubmit = this.onClickHandlerSubmit.bind(this);
   }
@@ -660,6 +678,7 @@ class CreateNewAccount extends React.Component {
       })
     })
     .then(res => {
+
       if (res.status === 200) {
         userLoggedIn = true;
         globalEmail = this.state.email
@@ -671,35 +690,41 @@ class CreateNewAccount extends React.Component {
           collegeYear:'',
           major:''
         };
-      } else {
-        this.state = {
-          name: '',
-          email:'',
-          password:'',
-          collegeYear:'',
-          major:''
-        };
-        ReactDOM.render(<ProfilePage />, document.getElementById('root'));
-
       }
-    }).catch(err => {
-      this.state = {
-        name: '',
-        email:'',
-        password:'',
-        collegeYear:'',
-        major:''
-      };
-      ReactDOM.render(<ProfilePage />, document.getElementById('root'));
-      console.log(err);
-    })
-  }
+      else {
+        ReactDOM.render(<CreateNewAccount />, document.getElementById('root'));
+        
+        if(this.state.name == ''){
+          this.setState({nameError: "Please enter your name."})
+        }
+        if(this.state.email == ''){
+          this.setState({emailError: "Please enter an email."})
+        }
+        if(this.state.password == ''){
+          this.setState({passwordError: "Please enter a password."})
+        }
+        if(this.state.major == ''){
+          this.setState({majorError: "Please enter a major."})
+        }
+        if(this.state.collegeYear == ''){
+          this.setState({collegeYearError: "Please enter a college year."})
+        }
+      }
+        })
+      }
+
+      
 
 
   onClickHandlerBack() {
     ReactDOM.render(<ProfilePage />, document.getElementById('root'));
   }
   render () {
+    const mystyle = {
+      color: "red",
+      padding: "1px",
+      fontSize: "14px"
+    };
     return (
       <div>
         <NavigationBar />
@@ -707,6 +732,7 @@ class CreateNewAccount extends React.Component {
         <br />
         <h1 className="PageHeader">Create New Account</h1>
         <form onSubmit={this.onSubmit}>
+        
           <label>
             Enter Name
             <br />
@@ -714,6 +740,7 @@ class CreateNewAccount extends React.Component {
             <input type="text" name="name" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
+          <strong style={mystyle}>{this.state.nameError}</strong>
           <br />
           <label>
             Enter Email
@@ -722,6 +749,7 @@ class CreateNewAccount extends React.Component {
             <input type="text" name="email" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
+          <strong style={mystyle}>{this.state.emailError}</strong>
           <br /><label>
             Enter Password
             <br />
@@ -729,6 +757,7 @@ class CreateNewAccount extends React.Component {
             <input type="text" name="password" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
+          <strong style={mystyle}>{this.state.passwordError}</strong>
           <br />
           <label>
             Enter College Year
@@ -737,6 +766,7 @@ class CreateNewAccount extends React.Component {
             <input type="text" name="collegeYear" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
+          <strong style={mystyle}>{this.state.collegeYearError}</strong>
           <br />
           <label>
             Enter Major
@@ -745,6 +775,7 @@ class CreateNewAccount extends React.Component {
             <input type="text" name="major" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
+          <strong style={mystyle}>{this.state.majorError}</strong>
           <br />
           <button className="ProfileButton" alt="Button to return to login screen."onClick={this.onClickHandlerBack}>Back</button>
           <button className="ProfileButton" alt="Button to change profile picture.">Edit Picture</button>
