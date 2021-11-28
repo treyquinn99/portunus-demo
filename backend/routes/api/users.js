@@ -9,9 +9,11 @@ const {validateLogin, validateNewAccount} = require('../../validation.js');
 const { findOneAndUpdate } = require('../../models/User');
 const JobOpportunity = require('../../models/JobOpportunity');
 
-// @route POST api/users/register
-// @description tests users route
-// @access Public
+/**  
+ * @route POST api/users/register
+ * @description tests users route
+ * @access Public
+*/
 router.post('/register', (req, res) => {
 // call helper function to see if account info is valid 
   console.log(req.body);
@@ -47,7 +49,11 @@ router.post('/register', (req, res) => {
     }
   });
 });
-
+/**  
+ * @route POST api/users/register
+ * @description tests users credentials
+ * @access Public
+*/
 router.post('/login', (req, res) => {
   // call helper function to see if login info is valid
   const { errors, isValid } = validateLogin(req.body);
@@ -71,7 +77,11 @@ router.post('/login', (req, res) => {
     })
   });
 }) 
-
+/**  
+ * @route GET api/users/:id
+ * @description request the specified email from User table
+ * @access Public
+*/
 router.get('/:id', (req, res) => {
   const email = req.query.myparam1;
   console.log('email = ' + email);
@@ -80,7 +90,11 @@ router.get('/:id', (req, res) => {
     })
     .catch(err => console.log(err));
 })
-
+/**  
+ * @route PATCH api/users/follow
+ * @description adds followed opportunity to the array in User table for the current user.
+ * @access Public
+*/
 router.patch('/follow/', (req, res) => {
   const filter = { email: req.query.myparam2 }
   console.log(filter)

@@ -79,7 +79,6 @@ class OpListing extends React.Component {
 
   onClickHandler() {
     if (!this.state.companyName) {
-      /*API call to fetch organization's data from the backend*/
       fetch(`http://localhost:3001/api/organizations/:id/?myparam1=${this.state.orgName}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
@@ -93,7 +92,6 @@ class OpListing extends React.Component {
               console.log(err);
             })
     } else {
-      /*API call to fetch job opportunity's data from the backend*/
       fetch(`http://localhost:3001/api/jobopportunities/:id/?myparam1=${this.state.orgName}`, {
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
