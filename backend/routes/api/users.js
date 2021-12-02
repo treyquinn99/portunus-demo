@@ -90,19 +90,42 @@ router.get('/:id', (req, res) => {
     })
     .catch(err => console.log(err));
 })
+
+/**  
+ * @route PATCH api/users/updateProfile
+ * @description updates user profile according to user input on edit profile screen
+ * @access Public
+*/
+
+router.patch('/updateProfile/', (req, res) => {
+  let update = {}
+  filter = {email: req.query.email}
+  if (req.query.name) {
+    update.name = req.query.name
+  } 
+  if (req.query.collegeYear) {
+    update.collegeYear = req.query.collegeYear
+  }
+  if (req.query.major) {
+    update.major = req.query.major
+  }
+  User.findOneAndUpdate(filter, update).then(user => {
+    res.json(user)
+  })
+  .catch(err => res.json(err)) 
+})
+
 /**  
  * @route PATCH api/users/follow
  * @description adds followed opportunity to the array in User table for the current user.
  * @access Public
 */
+
 router.patch('/follow/', (req, res) => {
   const filter = { email: req.query.myparam2 }
   console.log(filter)
   console.log(req.query.myparam1)
   JobOpportunity.findOne({"companyName": req.query.myparam1}, function (err, job) {
-    console.log("returning")
-    console.log(err)
-    console.log(job)
     if (!job) {
       console.log("followOps")
       const user = User.findOne(filter).then(user => {

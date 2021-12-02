@@ -618,8 +618,19 @@ class EditProfile extends React.Component {
     this.onClickHandler = this.onClickHandler.bind(this)
   }
   onClickHandler() {
+    fetch(`http://localhost:3001/api/users/updateProfile/?name=${this.state.name}&collegeYear=${this.state.collegeYear}&major=${this.state.major}&email=${globalEmail}`, {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+    })
+      .then(resp => resp.json())
+      .catch(err => {
+        console.log(err);
+      })
     ReactDOM.render(<ProfilePage name = {this.state.name} collegeYear = {this.state.collegeYear} major = {this.state.major}/>, document.getElementById('root'));
   }
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
   render () {
     return (
       <div>
@@ -632,7 +643,7 @@ class EditProfile extends React.Component {
             Edit Name
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="name" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
@@ -640,7 +651,7 @@ class EditProfile extends React.Component {
             Edit College Year
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="collegeYear" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
@@ -648,7 +659,7 @@ class EditProfile extends React.Component {
             Edit Major
             <br />
             <br />
-            <input type="text" name="name" />
+            <input type="text" name="major" value={this.state.value} onChange={this.handleChange} />
           </label>
           <br />
           <br />
