@@ -679,6 +679,7 @@ class CreateNewAccount extends React.Component {
       emailError:'',
       collegeYearError:'',
       majorError: '',
+      userExistsError:'',
     };
     this.onSubmit = this.onClickHandlerSubmit.bind(this);
   }
@@ -711,26 +712,60 @@ class CreateNewAccount extends React.Component {
           email:'',
           password:'',
           collegeYear:'',
-          major:''
+          major:'',
+          userExistsError: ''
         };
       }
       else {
+        var inputCount = 0;
+
         ReactDOM.render(<CreateNewAccount />, document.getElementById('root'));
         
         if(this.state.name == ''){
-          this.setState({nameError: "Please enter your name."})
+          this.setState({nameError: "(*Required)"})
         }
+        else{
+          this.setState({nameError: ""})
+          inputCount++;
+        }
+        let check = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
         if(this.state.email == ''){
-          this.setState({emailError: "Please enter an email."})
+          this.setState({emailError: "(*Required)"})
+        }
+        else if(check.test(this.state.email) == false){
+          this.setState({emailError: "Please enter a valid email address."})
+        }
+        else{
+          this.setState({emailError: ""})
+          inputCount++;
         }
         if(this.state.password == ''){
-          this.setState({passwordError: "Please enter a password."})
+          this.setState({passwordError: "(*Required)"})
+        }
+        else if(this.state.password.length < 8){
+          this.setState({passwordError: "The password must contain at least 8 characters."})
+        }
+        else{
+          this.setState({passwordError: ""})
+          inputCount++;
         }
         if(this.state.major == ''){
-          this.setState({majorError: "Please enter a major."})
+          this.setState({majorError: "(*Required)"})
+        }
+        else{
+          this.setState({majorError: ""})
+          inputCount++;
         }
         if(this.state.collegeYear == ''){
-          this.setState({collegeYearError: "Please enter a college year."})
+          this.setState({collegeYearError: "(*Required)"})
+        }
+        else{
+          this.setState({collegeYearError: ""})
+          inputCount++;
+        }
+        if(inputCount == 5) {
+          this.setState({userExistsError: "A user with the entered email address already exists."})
         }
       }
         })
@@ -755,7 +790,9 @@ class CreateNewAccount extends React.Component {
         <br />
         <h1 className="PageHeader">Create New Account</h1>
         <form onSubmit={this.onSubmit}>
-        
+          <br />
+          <strong style={mystyle}>{this.state.userExistsError}</strong>
+          <br />
           <label>
             Enter Name
             <br />
