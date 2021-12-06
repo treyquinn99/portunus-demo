@@ -3,6 +3,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Installation Guide
+Note that the final goal is for Portunus to be accessible from the Internet (web application), so eventual end users will not have to go through this process. This install guide is for anyone interested in trying out Portunus in the meantime by running it on their local computer rather than navigating to a website.
 
 ### Prerequisites/Dependencies
 
