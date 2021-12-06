@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# Delivery Documentation
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Installation Guide
 
-In the project directory, you can run:
+### Prerequisites/Dependencies
 
-### `npm start`
+We must first install the following pre-requisites/dependencies to run Portunus locally.
+#### Node and npm
+  >1)	Navigate to https://nodejs.org/en/.
+  >2)	Select the download option that says Recommended for Most Users (LTS).
+  >3)	Follow the instructions given by the Node Install Wizard.
+  >4)	Upon completion, both Node and npm will be downloaded.
+All dependencies will be automatically installed and handled by npm, so this is the only third party install we must go through.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Download
+We must now access the actual application code.
+  >1)	Navigate to https://github.com/treyquinn99/portunus-demo/tree/master.
+  >2)	Click the green Code dropdown button and select “Download ZIP”.
+  >3)	Unzip the download to create the Portunus folder. 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Installation 
+We will now utilize pre-existing scripts to install the necessary components to run Portunus.
+  >1)	Using a terminal window, change directory to the folder we created in the download section.
+  >2)	In this folder, type the command `npm install` into the terminal and hit enter. This will install everything necessary to run the application.
 
-### `npm test`
+### Running
+We are now ready to launch the application
+  >1)	The main folder has a subfolder named backend. In the open terminal window, change directory into backend, then type and run the command `npm start`. A message should indicate that a server is listening on port 3001 and MongoDB is connected.
+  >2)	Open a second terminal window and navigate to the main folder. Run `npm start` in this folder as well. This will automatically launch the app in your browser at http://localhost:3000/portunus-demo. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Troubleshooting
+Below are four common errors that could occur during the installation process. Causes and fixes provided.
 
-### `npm run build`
+#### 1) `Error: listen EADDRINUSE: address already in use :::3001`
+  >Cause: Portunus is already running on an open terminal window, and the port on the local computer is therefore in use.\
+  \
+  >Fix: Find any open terminal window and control c to stop that instance of Portunus running. Then, repeat the running section in the instructions. Alternatively, use the instance of Portunus that is already running by navigating to http://localhost:3000/portunus-demo in any browser.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### 2) `sh: react-scripts: command not found`
+  >Cause: Tried to launch the application with `npm start` before running `npm install`, so scripts are not installed.\
+  \
+  >Fix: Run `npm install` in the same directory, and then continue with `npm start`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+#### 3) `ENOENT: no such file or directory, open '/Users/path/to/package.json'`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  >Cause: Tried to `npm install` in the wrong directory.\
+  \
+  >Fix: Change directory into the unzipped folder and continue with installation/running instructions.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### 4) Browser launches but nothing happens when trying to create user or login
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+  >Cause: Frontend is started, but backend is not.\
+  \
+  >Fix: Open a terminal window, change directory into the backend folder, run `npm start`. This will start the backend.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
