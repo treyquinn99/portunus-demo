@@ -663,7 +663,7 @@ class EditProfile extends React.Component {
           </label>
           <br />
           <br />
-          <button className="ProfileButton" alt="Button to change profile picture.">Edit Picture</button>
+          {/*<button className="ProfileButton" alt="Button to change profile picture.">Edit Picture</button>*/}
           <button className="ProfileButton" alt="Button to save changes." onClick={this.onClickHandler}>Save Changes</button>
         </form>
         </div>
@@ -753,9 +753,6 @@ class CreateNewAccount extends React.Component {
         }
         if(this.state.password == ''){
           this.setState({passwordError: "(*Required)"})
-        }
-        else if(this.state.password.length < 8){
-          this.setState({passwordError: "The password must contain at least 8 characters."})
         }
         else{
           this.setState({passwordError: ""})
@@ -849,7 +846,7 @@ class CreateNewAccount extends React.Component {
           <strong style={mystyle}>{this.state.majorError}</strong>
           <br />
           <button className="ProfileButton" alt="Button to return to login screen."onClick={this.onClickHandlerBack}>Back</button>
-          <button className="ProfileButton" alt="Button to change profile picture.">Edit Picture</button>
+          {/*<button className="ProfileButton" alt="Button to change profile picture.">Edit Picture</button>*/}
           <button className="ProfileButton" alt="Button to submit profile information and login.">Submit</button>
         </form>
         </div>
