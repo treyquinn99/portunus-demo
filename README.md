@@ -58,6 +58,24 @@ Below are four common errors that could occur during the installation process. C
   \
   >Fix: Open a terminal window, change directory into the backend folder, run `npm start`. This will start the backend.
 
+## Release Notes version Portunus 1.0.0
+### NEW FEATURES
+>* Added ability create account and login.
+>* Added ability to view, navigate, and search both Job Opportunity and Professional Development Opportunity directories.
+>* Users can save both job opportunities and professional development opportunities to their profile.
+>* Users can edit profile information at any time.
+
+### BUG FIXES
+>* Editing profile no longer logs the user out.
+>* Creating an account after the first error messages such as “user already exists,” “enter a valid email address,” etc. now takes the user to their profile page.
+>* Clicking user profile while not logged in no longer crashes the application
+>* Selecting job opportunity or professional developement opportunity no longer crashes the application
+>* Going directly from job directory to professional development directory no longer results in wrong header
+### KNOWN BUGS
+
+>* Searching for Job opportunities on the search bar, does not let user cannot access the job’s page.
+>* After searching for an opportunity that does not exist on search bar, when the user enters existing opportunity again, the Autofill does not work.
+>* Password is not masked when creating a new account.
 
 
 
